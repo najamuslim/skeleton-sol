@@ -10,14 +10,11 @@ export default function Home() {
     Array<{ wallet: string; balance: number }>
   >([]);
   const dummyHolders = [
-    {
-      wallet: "5Q54YBBx7STWXAAUHjAE8CCXHXWNZD4wJctSexZ1dYga",
-      balance: 1000,
-    },
-    {
-      wallet: "7QW5XDRaTXMZA2EHk4545234sddfsd312d322sase3qas",
-      balance: 500,
-    }
+    { wallet: '5Q54YBBx7STWXAAUHjAE8CCXHXWNZD4wJctSexZ1dYga', balance: 850 },
+    { wallet: 'F7z9vP6dxVNjMbZmVv8Zf6sPtZBR9CVpi7DprqTT2u9k', balance: 765 },
+    { wallet: 'FHMx5kbD12HpL6yZG9msEzH88bwnySh6zULuRPR8zdg6', balance: 150 },
+    { wallet: 'F7czWJk2z3NqV2G7dc5gXNU7d2sJmcLnvwJ5jxzzH2rQ', balance: 310 },
+    { wallet: '4Tt8XBBwDJj9w7X7MeYcveG1QZpT6r4exRhnU92Dbm8K', balance: 485 }
   ];
   
 
@@ -58,11 +55,7 @@ export default function Home() {
     // </div>
     <div className="bg-white">
       <Navbar />
-      {
-        dummyHolders.map(({ wallet, balance }) =>
-          <Skeleton key={wallet} length={dummyHolders.length} wallet={wallet} size={50 + Math.sqrt(balance) * 10} />
-        )
-      }
+      <Skeleton holders={dummyHolders} />
       <Recent />
     </div>
   );

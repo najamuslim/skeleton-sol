@@ -4,18 +4,22 @@ import React from 'react';
 interface SkeletonProps {
   style?: React.CSSProperties;
   color: SkeletonColors,
-  size:number
+  size: number,
+  x: number,
+  y: number,
 }
 
 interface SkeletonColors {
-  hat:string,
-  clothes:string,
-  shoes:string,
+  hat: string,
+  clothes: string,
+  shoes: string,
 }
 
-const SkeletonItem: React.FC<SkeletonProps> = ({ style, color, size }) => (
+const SkeletonItem: React.FC<SkeletonProps> = ({ style, color, size, x, y }) => (
   <div
     style={{
+      left: x,
+      right: y,
       ...style
     }}
   >

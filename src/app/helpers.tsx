@@ -25,13 +25,17 @@ export function stringToHexColor(str: string): string {
   }
 
 // Helper function to convert a part of the address into a number for x and y
-export const addressToPosition = (address: string, scale: number): { x: number, y: number } => {
-    const x = parseInt(address.slice(0, 8), 16) % scale; // Get the first 8 characters and convert to integer
-    const y = parseInt(address.slice(8, 16), 16) % scale; // Get the next 8 characters and convert to integer
-    console.log(x)
-    console.log(y)
-    return { x, y };
-};
+// utils/addressToPosition.ts
+export const addressToPosition = (address: string, scale: number, startRange:number, endRange:number):  number => {
+    // Ensure the address is at least 16 characters long
+    const paddedAddress = address.padEnd(16, '0');
+    
+    // Get the first 8 characters for x, and the next 8 characters for y
+    const position = parseInt(paddedAddress.slice(startRange, endRange), 16) % scale; // Convert to integer and mod with scale\
+    
+    return position;
+  };
+  
 
 // Helper function to convert the address into a size (e.g., within a certain range)
 export const addressToSize = (address: string, minSize: number, maxSize: number): number => {
