@@ -1,31 +1,73 @@
-import React from "react";
 
-const Flower = ({ wallet, size }: { wallet: string; size: number }) => {
-  const hash = wallet; // Use the wallet address as the hash seed
-  const petalCount = (parseInt(hash.slice(0, 2), 16) % 12) + 3; // Generate 3-14 petals
-  const color = `#${hash.slice(-6)}`; // Generate a color based on the wallet
+import { useEffect, useRef, useState } from 'react';
+import SkeletonItem from './SkeletonItem';
+import { addressToColor, addressToPosition } from '../helpers';
+interface Position {
+  x: number;
+  y: number;
+}
+
+const generateRandomPosition = (containerWidth: number, containerHeight: number): Position => {
+  const width = 100; // Skeleton width
+  const height = 100; // Skeleton height
+  const x = Math.random() * (containerWidth - width);
+  const y = Math.random() * (containerHeight - height);
+
+  return { x, y };
+};
+
+const Skeleton: React.FC<{wallet: string; size: number, length:number }> = ({wallet, size, length}) => {
+  const [skeletons, setSkeletons] = useState<Position[]>([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const numSkeletons = length; // Number of skeletons
+    const positions: Position[] = [];
+
+    for (let i = 0; i < numSkeletons; i++) {
+      let position: Position;
+      let overlap = false;
+
+    //   Ensure no overlap
+    //   do {
+    //     position = addressToPosition(wallet, 100);
+    //     overlap = positions.some(
+    //       (pos) => Math.abs(pos.x - position.x) < 100 && Math.abs(pos.y - position.y) < 100
+    //     );
+    //   } while (overlap);
+
+      positions.push(addressToPosition(wallet, 100));
+    }
+    setSkeletons(positions);
+  }, []);
 
   return (
-    <svg width={size} height={size}>
-      {[...Array(petalCount)].map((_, i) => {
-        const angle = (i * 360) / petalCount; // Distribute petals evenly
-        const x = size / 2 + (size / 3) * Math.cos((angle * Math.PI) / 180);
-        const y = size / 2 + (size / 3) * Math.sin((angle * Math.PI) / 180);
-
-        return (
-          <circle
-            key={i}
-            cx={x}
-            cy={y}
-            r="10"
-            fill={color}
-            transform={`rotate(${angle} ${size / 2} ${size / 2})`}
-          />
-        );
-      })}
-      <circle cx={size / 2} cy={size / 2} r="20" fill={color} />
-    </svg>
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        height: '1000px',
+        overflow: 'hidden',
+      }}
+      className='bg-zinc-700'
+    >
+      {skeletons.map((position, index) => (
+        <SkeletonItem
+          key={index}
+          size={100} 
+          color={{hat:addressToColor(wallet,0,6), clothes:addressToColor(wallet,7,13), shoes:addressToColor(wallet,14,20) }} 
+          style={{
+            position: 'absolute',
+            left: position.x,
+            top: position.y,
+          }}
+        />
+      ))}
+    </div>
   );
 };
 
-export default Flower;
+export default Skeleton;
