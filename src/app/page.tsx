@@ -5,6 +5,7 @@ import CanvasSkeletons from "./components/CanvasSkeletons";
 import Skeleton from "./components/Skeleton";
 import Navbar from "./components/Navbar";
 import Recent from "./components/Recent";
+
 export default function Home() {
   const [holders, setHolders] = useState<
     Array<{ wallet: string; balance: number }>
@@ -54,7 +55,7 @@ export default function Home() {
     { wallet: '9T5QLMYR7BLX8YZ2CNTZR3RWTQYCZ8VLYPM9YLXRC5TL7', balance: 820 },
     { wallet: 'LT9CVQ2NYM7Z5TLY8WRXQ3RNCBLZ8YT5R9WRQXY2LYTNC', balance: 570 },
     { wallet: 'N9X5LYZR8Q7TWBYL6RQM3PLYT58NZYMCWLRY2ZNCYT9T5', balance: 460 },
-    { wallet: 'LMX5ZYLRBT9CWYL8ZRQ27TYPMCW9R8NTLZYV3RYBYT6ZQP', balance: 750 },
+    { wallet: 'LMX5ZYLRBT9CWYL8ZRQ27TYNTLZYPMCW9R8V3RYBYT6ZQP', balance: 750 },
   ];
   
 
@@ -96,7 +97,7 @@ export default function Home() {
     // </div>
     <div>
       <Navbar />
-      <Skeleton holders={holders} />
+      <Skeleton holders={dummyHolders} />
       <Recent />
     </div>
   );
