@@ -15,6 +15,7 @@ interface SkeletonProps {
 const Recent: React.FC<SkeletonProps> = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isActive, setActive] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -53,23 +54,28 @@ const Recent: React.FC<SkeletonProps> = () => {
   };
 
   return (
-    <div className="absolute top-36 right-20 text-black">
+    <div className="absolute top-36 right-24 text-black">
       <div className="bg-[#FFFFFF] py-3 px-3 w-[24rem]">
-        <span>{`>>>>>`}</span>
-        <p className="font-bold text-xl">Recent Input</p>
-        <hr className="border border-black my-4" />
-        <div className="flex justify-between font-bold">
-          <p>Time</p>
-          <p>From</p>
-          <p>Amount</p>
-        </div>
-        {transactions.map((tx, index) => (
-          <div key={index} className="flex justify-between font-bold my-2">
-            <p>{getTimeAgo(tx.timestamp)}</p>
-            <p className="w-1/3 truncate">{tx.from}</p>
-            <p>{Number(tx.amount).toFixed(2)}</p>
-          </div>
-        ))}
+        <span onClick={() => setActive(!isActive)} className="cursor-pointer">{`>>>>>`}</span>
+        {isActive && (
+          <>
+            <p className="font-bold text-xl">Recent Input</p>
+            <hr className="border border-black my-4" />
+            <div className="flex justify-between font-bold">
+              <p>Time</p>
+              <p>From</p>
+              <p>Amount</p>
+            </div>
+            {transactions.map((tx, index) => (
+              <div key={index} className="flex justify-between font-bold my-2">
+                <p>{getTimeAgo(tx.timestamp)}</p>
+                <p className="w-1/3 truncate">{tx.from}</p>
+                <p>{Number(tx.amount).toFixed(2)}</p>
+              </div>
+            ))}
+          </>
+        )}
+
       </div>
     </div>
   );

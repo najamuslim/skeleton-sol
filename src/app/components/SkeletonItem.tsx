@@ -50,7 +50,12 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
     {/* Text below the SVG, only visible when hovering */}
     <div
       className="absolute z-10  mt-2 text-center opacity-0 group-hover:opacity-100 transition-opacity min-w-48 w-full bg-black bg-opacity-30 p-2 "
-      style={{ width: "100%" }}
+      // style={{ width: "100%" }}
+      style={{
+        left: "50%", // Posisi di tengah
+        transform: "translateX(-50%)", // Lurus meski elemen utama miring
+        top: "100%", // Posisi di bawah elemen utama
+      }}
     >
       <p className=" text-black truncate">{address}</p>
       <p className=" text-black">{`${size} $SKELETON`}</p>

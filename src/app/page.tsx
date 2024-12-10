@@ -11,14 +11,8 @@ export default function Home() {
     Array<{ wallet: string; balance: number }>
   >([]);
   const dummyHolders = [
-    {
-      wallet: "B8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9",
-      balance: Math.random() * 30000, // Huge balance
-    },
-    {
-      wallet: "D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9X0Y1",
-      balance: Math.random() * 50000, // Enormous balance
-    },
+    
+    
     { wallet: "5Q54YBBx7STWXAAUHjAE8CCXHXWNZD4wJctSexZ1dYga", balance: 0.8 },
     { wallet: "F7z9vP6dxVNjMbZmVv8Zf6sPtZBR9CVpi7DprqTT2u9k", balance: 765 },
     { wallet: "FHMx5kbD12HpL6yZG9msEzH88bwnySh6zULuRPR8zdg6", balance: 150 },
@@ -49,7 +43,10 @@ export default function Home() {
     { wallet: "W9YZ5JLRXCM82TLYKV7NQT8PLCYB9MRXZ6TQNTYLWR2JL", balance: 400 },
     { wallet: "Z3NLRXW9TY7VP2BML58CYTLQJ9CYXZ6LR5NTMVY2RXTBY", balance: 3 },
     { wallet: "N5QTY8WMCZL2RV9YPJ9R3LXT7NT58LYCZY6MRQTBLNXYW", balance: 720 },
-    { wallet: "J9RWZLYXCVN3PLYT58MYRTZL8XQ2BNT9C6QMVLY5TYPZR", balance: 10 },
+    { wallet: "J9RWZLYXCVN3PLYT58MYRTZL8XQ2BNT9C6QMVLY5TYPZR", balance: 10 },{
+      wallet: "D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9X0Y1",
+      balance: Math.random() * 50000, // Enormous balance
+    },
     { wallet: "CVQ8JNT9YW5ZPLX2RMCZT8BMLRQ37YNTX9CZLY6R5VTBY", balance: 500 },
     { wallet: "T9PQRXYCV6LY8BWLZ3NR7VYMCZ5JNT8QZBLX2MVYC9PLT", balance: 310 },
     { wallet: "Q7MRZ5TLY8WRY2NXBL9JPYTQMV3LYWT9XCYZR6NTBLMQR", balance: 20 },
@@ -75,6 +72,9 @@ export default function Home() {
     {
       wallet: "C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4",
       balance: Math.random() * 1000,
+    },{
+      wallet: "B8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9",
+      balance: Math.random() * 30000, // Huge balance
     },
     {
       wallet: "D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5",
@@ -174,16 +174,8 @@ export default function Home() {
       balance: Math.random() * 0.001, // Microscopic balance
     },
     {
-      wallet: "B8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9",
-      balance: Math.random() * 30000, // Huge balance
-    },
-    {
       wallet: "C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9X0",
       balance: Math.random() * 0.005, // Very tiny balance
-    },
-    {
-      wallet: "D0E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9X0Y1",
-      balance: Math.random() * 50000, // Enormous balance
     },
     {
       wallet: "E1F2G3H4I5J6K7L8M9N0O1P2Q3R4S5T6U7V8W9X0Y1Z2",
@@ -229,7 +221,7 @@ export default function Home() {
     <div>
       <Navbar />
       <Skeleton holders={dummyHolders} />
-      {/* <Recent /> */}
+      <Recent />
     </div>
   );
 }

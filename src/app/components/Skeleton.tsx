@@ -114,19 +114,27 @@ const Skeleton: React.FC<{
   };
 
   return (
-    <div className="w-full px-8 py-6">
+    <div className="w-full  py-6 relative  bg-[url('/grain.png')] bg-cover">
+      <img
+        src="/frame.png"
+        alt="Frame"
+        className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none  z-50"
+      />
+
       <div
         ref={containerRef}
         style={{
           position: "relative",
           width: "100%",
+          margin:"0px auto",
           height: "100%",
           minHeight: "85vh",
-          background: "#374151",
           borderRadius: "0.5rem",
           overflowY: "auto", // Tambahkan scroll vertikal
           overflowX: "hidden", // Prevent horizontal scroll
+          scrollbarWidth: "none", // For Firefox
         }}
+        className="px-8"
       >
         <div
           style={{
