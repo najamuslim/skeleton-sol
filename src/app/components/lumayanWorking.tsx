@@ -46,7 +46,7 @@ const Skeleton: React.FC<{
       width: number,
       height: number
     ) => {
-      const margin = 2; // Extra space between skeletons
+      const margin = 20; // Extra space between skeletons
       for (const space of occupiedSpaces) {
         if (
           !(
@@ -114,7 +114,7 @@ const Skeleton: React.FC<{
   };
 
   return (
-    <div className="w-full px-8 py-6">
+    <div className="w-full px-8 py-6" style={{ height: "calc(100vh - 100px)" }}>
       <div
         ref={containerRef}
         style={{
