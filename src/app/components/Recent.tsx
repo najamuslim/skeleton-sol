@@ -1,5 +1,5 @@
 // components/Skeleton.tsx
-import React from 'react';
+import React, { useState } from 'react';
 
 interface SkeletonProps {
   style?: React.CSSProperties;
@@ -8,7 +8,7 @@ interface SkeletonProps {
 const Recent: React.FC<SkeletonProps> = ({ style }) => (
   <div className="absolute top-36 right-20 text-black">
     <div className='bg-[#FFFFFF] py-3 px-3 w-[24rem]'>
-      <span>{`>>>>>`}</span>
+      <span>{`>>>`}</span>
       <p className='font-bold text-xl'>Recent Input</p>
       <hr className='border border-black my-4'/>
       <div className="flex justify-between font-bold">
