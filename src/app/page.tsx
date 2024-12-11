@@ -10,6 +10,12 @@ export default function Home() {
   const [holders, setHolders] = useState<
     Array<{ wallet: string; balance: number }>
   >([]);
+  const [searchedAddress, setSearchedAddress] = useState<string | null>(null);
+
+  const handleSearch = (address: string) => {
+    setSearchedAddress(address);
+  };
+
   const dummyHolders = [
     
     
@@ -200,27 +206,12 @@ export default function Home() {
   }, []);
 
   return (
-    // <div
-    //   style={{
-    //     display: "flex",
-    //     flexWrap: "wrap",
-    //     gap: "20px",
-    //     padding: "20px",
-    //   }}
-    // >
-    //   {holders.map(({ wallet, balance }) => (
-    //     <div key={wallet} style={{ textAlign: "center" }}>
-    //       <Flower wallet={wallet} size={50 + Math.sqrt(balance) * 10} />
-    //       <p>
-    //         {wallet.slice(0, 6)}...{wallet.slice(-4)}
-    //       </p>
-    //       <p>{balance.toFixed(2)} $FLOWER</p>
-    //     </div>
-    //   ))}
-    // </div>
-    <div>
-      <Navbar />
-      <Skeleton holders={dummyHolders} />
+    <div className="flex flex-col h-screen">
+      <Navbar onSearch={handleSearch} />
+      <Skeleton 
+        holders={dummyHolders} 
+        searchedAddress={searchedAddress}
+      />
       <Recent />
     </div>
   );

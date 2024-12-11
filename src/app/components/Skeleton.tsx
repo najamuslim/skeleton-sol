@@ -4,24 +4,38 @@ import { addressToColor } from "../helpers";
 
 const Skeleton: React.FC<{
   holders: Array<{ wallet: string; balance: number }>;
-}> = ({ holders }) => {
+  searchedAddress: string | null;
+}> = ({ holders, searchedAddress }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const updateDimensions = () => {
-      const container = containerRef.current;
-      if (!container) return;
-      setDimensions({
-        width: container.offsetWidth,
-        height: container.offsetHeight,
-      });
+      if (containerRef.current) {
+        setDimensions({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight,
+        });
+      }
     };
 
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
+
+  useEffect(() => {
+    if (searchedAddress) {
+      const skeletonElement = document.querySelector(`[data-address="${searchedAddress}"]`);
+      if (skeletonElement) {
+        skeletonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        skeletonElement.classList.add('highlight-skeleton');
+        setTimeout(() => {
+          skeletonElement.classList.remove('highlight-skeleton');
+        }, 2000);
+      }
+    }
+  }, [searchedAddress]);
 
   const getPositions = () => {
     const positions: Array<{
@@ -114,7 +128,7 @@ const Skeleton: React.FC<{
   };
 
   return (
-    <div className="w-full py-6 relative bg-[url('/grain.png')] bg-cover">
+    <div className="flex-1 relative bg-[url('/grain.png')] bg-cover">
       <div
         ref={containerRef}
         style={{
@@ -122,7 +136,6 @@ const Skeleton: React.FC<{
           width: "90%",
           margin: "0px auto",
           height: "100%",
-          minHeight: "calc(100vh - 155px)",
           borderRadius: "0.5rem",
           overflowY: "auto",
           overflowX: "hidden",
@@ -132,9 +145,8 @@ const Skeleton: React.FC<{
         <div
           style={{
             position: "relative",
-            minHeight: "100%",
-            paddingBottom: "160px",
-            paddingTop: "40px",
+            height: "100%",
+            padding: "40px 0",
           }}
         >
           {dimensions.width > 0 &&
@@ -154,11 +166,11 @@ const Skeleton: React.FC<{
                   position: "absolute",
                   transform: `rotate(${item.rotation}deg)`,
                 }}
+                isHighlighted={searchedAddress === item.wallet}
               />
             ))}
         </div>
       </div>
-
       <img
         src="/frame.png"
         alt="Frame"
