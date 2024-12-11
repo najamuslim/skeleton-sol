@@ -114,33 +114,27 @@ const Skeleton: React.FC<{
   };
 
   return (
-    <div className="w-full  py-6 relative  bg-[url('/grain.png')] bg-cover">
-      <img
-        src="/frame.png"
-        alt="Frame"
-        className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none  z-50"
-      />
-
+    <div className="w-full py-6 relative bg-[url('/grain.png')] bg-cover">
       <div
         ref={containerRef}
         style={{
           position: "relative",
-          width: "100%",
-          margin:"0px auto",
+          width: "90%",
+          margin: "0px auto",
           height: "100%",
           minHeight: "85vh",
           borderRadius: "0.5rem",
-          overflowY: "auto", // Tambahkan scroll vertikal
-          overflowX: "hidden", // Prevent horizontal scroll
-          scrollbarWidth: "none", // For Firefox
+          overflowY: "auto",
+          overflowX: "hidden",
+          scrollbarWidth: "none",
         }}
-        className="px-8"
       >
         <div
           style={{
             position: "relative",
             minHeight: "100%",
-            paddingBottom: "100px", // Extra padding untuk space di bawah
+            paddingBottom: "160px",
+            paddingTop: "40px",
           }}
         >
           {dimensions.width > 0 &&
@@ -148,7 +142,7 @@ const Skeleton: React.FC<{
               <SkeletonItem
                 key={item.wallet}
                 address={item.wallet}
-                size={item.balance}
+                size={item.balance * 0.7}
                 x={item.x}
                 y={item.y}
                 color={{
@@ -164,6 +158,13 @@ const Skeleton: React.FC<{
             ))}
         </div>
       </div>
+
+      <img
+        src="/frame.png"
+        alt="Frame"
+        className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none"
+        style={{ zIndex: 1 }}
+      />
     </div>
   );
 };

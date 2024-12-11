@@ -37,8 +37,8 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
       className="group cursor-pointer"
     >
       <svg
-        width={50 + Math.sqrt(size) * 10}
-        height={50 + Math.sqrt(size) * 10}
+        width={40 + Math.sqrt(size) * 8}
+        height={40 + Math.sqrt(size) * 8}
         viewBox="0 0 57 135"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
