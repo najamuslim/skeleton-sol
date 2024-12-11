@@ -14,21 +14,23 @@ interface SkeletonProps {
 
 const Recent: React.FC<SkeletonProps> = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isActive, setActive] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      setIsLoading(true);
       try {
         const response = await fetch("/api/recent-transactions");
         const data = await response.json();
-        console.log(data);
-        setTransactions(data);
+
+        if (Array.isArray(data)) {
+          setTransactions(data);
+        } else {
+          console.error("Invalid data format:", data);
+          setTransactions([]);
+        }
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
-      } finally {
-        setIsLoading(false);
+        setTransactions([]);
       }
     };
 
@@ -36,10 +38,6 @@ const Recent: React.FC<SkeletonProps> = () => {
     const interval = setInterval(fetchTransactions, 60000);
     return () => clearInterval(interval);
   }, []);
-
-  if (isLoading || transactions.length === 0) {
-    return null;
-  }
 
   const getTimeAgo = (timestamp: string | null) => {
     if (!timestamp) return "Unknown";
@@ -53,10 +51,17 @@ const Recent: React.FC<SkeletonProps> = () => {
     return `${hours}h ago`;
   };
 
+  if (transactions.length === 0) {
+    return null;
+  }
+
   return (
     <div className="absolute top-36 right-24 text-black">
       <div className="bg-[#FFFFFF] py-3 px-3 w-[24rem]">
-        <span onClick={() => setActive(!isActive)} className="cursor-pointer">{`>>>>>`}</span>
+        <span
+          onClick={() => setActive(!isActive)}
+          className="cursor-pointer"
+        >{`>>>>>`}</span>
         {isActive && (
           <>
             <p className="font-bold text-xl">Recent Input</p>
@@ -66,16 +71,22 @@ const Recent: React.FC<SkeletonProps> = () => {
               <p>From</p>
               <p>Amount</p>
             </div>
-            {transactions.map((tx, index) => (
-              <div key={index} className="flex justify-between font-bold my-2">
-                <p>{getTimeAgo(tx.timestamp)}</p>
-                <p className="w-1/3 truncate">{tx.from}</p>
-                <p>{Number(tx.amount).toFixed(2)}</p>
-              </div>
-            ))}
+            {Array.isArray(transactions) && transactions.length > 0 ? (
+              transactions.map((tx, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between font-bold my-2"
+                >
+                  <p>{getTimeAgo(tx.timestamp)}</p>
+                  <p className="w-1/3 truncate">{tx.from}</p>
+                  <p>{Number(tx.amount).toFixed(2)}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center my-4">No recent transactions</p>
+            )}
           </>
         )}
-
       </div>
     </div>
   );

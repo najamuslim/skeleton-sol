@@ -5,7 +5,8 @@ import { addressToColor } from "../helpers";
 const Skeleton: React.FC<{
   holders: Array<{ wallet: string; balance: number }>;
   searchedAddress: string | null;
-}> = ({ holders, searchedAddress }) => {
+  supply: number | null;
+}> = ({ holders, searchedAddress, supply }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -26,12 +27,14 @@ const Skeleton: React.FC<{
 
   useEffect(() => {
     if (searchedAddress) {
-      const skeletonElement = document.querySelector(`[data-address="${searchedAddress}"]`);
+      const skeletonElement = document.querySelector(
+        `[data-address="${searchedAddress}"]`
+      );
       if (skeletonElement) {
-        skeletonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        skeletonElement.classList.add('highlight-skeleton');
+        skeletonElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        skeletonElement.classList.add("highlight-skeleton");
         setTimeout(() => {
-          skeletonElement.classList.remove('highlight-skeleton');
+          skeletonElement.classList.remove("highlight-skeleton");
         }, 2000);
       }
     }
@@ -167,6 +170,7 @@ const Skeleton: React.FC<{
                   transform: `rotate(${item.rotation}deg)`,
                 }}
                 isHighlighted={searchedAddress === item.wallet}
+                percentage={supply ? (item.balance / supply) * 100 : 0}
               />
             ))}
         </div>
