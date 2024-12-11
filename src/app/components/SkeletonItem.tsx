@@ -23,44 +23,49 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
   size,
   x,
   y,
-}) => (
-  <div
-    style={{
-      left: x,
-      top: y,
-      transform: "translate(0, 0)",
-      ...style,
-    }}
-    className="group cursor-pointer"
-  >
-    <svg
-      width={50 + Math.sqrt(size) * 10}
-      height={50 + Math.sqrt(size) * 10}
-      viewBox="0 0 57 135"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect x="11" y="46" width="34" height="71" fill={`${color.clothes}`} />
-      <ellipse cx="28" cy="36" rx="17" ry="14" fill="#ffffff" />
-      <path d="M28.5 0L47.1195 27H9.88045L28.5 0Z" fill={`${color.hat}`} />
-      <circle cx="11.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
-      <circle cx="45.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
-    </svg>
-
-    {/* Text below the SVG, only visible when hovering */}
+}) => {
+  const rotation = style?.transform?.match(/-?\d+/)?.[0] || 0;
+  
+  return (
     <div
-      className="absolute z-10  mt-2 text-center opacity-0 group-hover:opacity-100 transition-opacity min-w-48 w-full bg-black bg-opacity-30 p-2 "
-      // style={{ width: "100%" }}
       style={{
-        left: "50%", // Posisi di tengah
-        transform: "translateX(-50%)", // Lurus meski elemen utama miring
-        top: "100%", // Posisi di bawah elemen utama
+        left: x,
+        top: y,
+        position: "absolute",
+        transform: `rotate(${rotation}deg)`,
       }}
+      className="group cursor-pointer"
     >
-      <p className=" text-black truncate">{address}</p>
-      <p className=" text-black">{`${size} $SKELETON`}</p>
+      <svg
+        width={50 + Math.sqrt(size) * 10}
+        height={50 + Math.sqrt(size) * 10}
+        viewBox="0 0 57 135"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="11" y="46" width="34" height="71" fill={`${color.clothes}`} />
+        <ellipse cx="28" cy="36" rx="17" ry="14" fill="#ffffff" />
+        <path d="M28.5 0L47.1195 27H9.88045L28.5 0Z" fill={`${color.hat}`} />
+        <circle cx="11.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
+        <circle cx="45.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
+      </svg>
+
+      <div
+        className="absolute text-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-30 p-2"
+        style={{
+          width: "200px",
+          left: "50%",
+          transform: `translateX(-50%) translateY(-50%) rotate(${-rotation}deg)`,
+          top: "50%",
+          marginLeft: "-100px",
+          zIndex: 9999,
+        }}
+      >
+        <p className="text-white truncate">{address}</p>
+        <p className="text-white">{`${size} $SKELETON`}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default SkeletonItem;
