@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Afacad } from 'next/font/google';
 import "./globals.css";
 
 const geistSans = localFont({
@@ -11,6 +12,12 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+
+const afacad = Afacad({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-afacad',
 });
 
 export const metadata: Metadata = {
@@ -26,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${afacad.variable} font-afacad antialiased bg-slate-500`}
       >
         {children}
       </body>

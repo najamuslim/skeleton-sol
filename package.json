@@ -6,10 +6,13 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "distribute": "ts-node scripts/distributeTokens.ts"
   },
   "dependencies": {
+    "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.8",
+    "fs": "^0.0.1-security",
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -22,6 +25,7 @@
     "eslint-config-next": "15.0.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
