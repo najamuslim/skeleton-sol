@@ -122,7 +122,7 @@ const Skeleton: React.FC<{
           width: "90%",
           margin: "0px auto",
           height: "100%",
-          minHeight: "85vh",
+          minHeight: "calc(100vh - 155px)",
           borderRadius: "0.5rem",
           overflowY: "auto",
           overflowX: "hidden",
