@@ -140,7 +140,7 @@ const Skeleton: React.FC<{
           margin: "0px auto",
           height: "100%",
           borderRadius: "0.5rem",
-          overflowY: "auto",
+          overflowY: "auto", 
           overflowX: "hidden",
           scrollbarWidth: "none",
         }}

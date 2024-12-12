@@ -1,5 +1,6 @@
 // components/Skeleton.tsx
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface SkeletonProps {
   address: string;
@@ -52,9 +53,34 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
 }) => {
   const rotation = style?.transform?.match(/-?\d+/)?.[0] || 0;
   const hatPath = getHatPath(address);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const elementRef = useRef<HTMLDivElement>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const updateTooltipPosition = () => {
+      if (elementRef.current) {
+        const rect = elementRef.current.getBoundingClientRect();
+        setTooltipPosition({
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        });
+      }
+    };
+
+    window.addEventListener('scroll', updateTooltipPosition);
+    window.addEventListener('resize', updateTooltipPosition);
+    updateTooltipPosition();
+
+    return () => {
+      window.removeEventListener('scroll', updateTooltipPosition);
+      window.removeEventListener('resize', updateTooltipPosition);
+    };
+  }, []);
 
   return (
     <div
+      ref={elementRef}
       data-address={address}
       style={{
         left: x,
@@ -62,7 +88,9 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         position: "absolute",
         transform: `rotate(${rotation}deg)`,
       }}
-      className="group cursor-pointer"
+      className="group cursor-pointer relative"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
     >
       <svg
         width={40 + Math.sqrt(size) * 8}
@@ -70,7 +98,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         viewBox="0 0 57 135"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={isHighlighted ? "highlight-skeleton" : ""}
+        className={`${isHighlighted ? "highlight-skeleton" : ""} relative z-10`}
         style={{
           filter: isHighlighted
             ? "drop-shadow(0 0 15px rgba(255, 255, 255, 0.7))"
@@ -92,21 +120,27 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         <circle cx="45.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
       </svg>
 
-      <div
-        className="absolute text-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-30 p-2"
-        style={{
-          width: "200px",
-          left: "50%",
-          transform: `translateX(-50%) translateY(-50%) rotate(${-rotation}deg)`,
-          top: "50%",
-          marginLeft: "-100px",
-          zIndex: 9999,
-        }}
-      >
-        <p className="text-white truncate">{address}</p>
-        <p className="text-white">{`${size.toFixed(2)} $SKELETON`}</p>
-        <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
-      </div>
+      {showTooltip &&
+        createPortal(
+          <div
+            className="transition-opacity bg-black bg-opacity-60 p-2 rounded-lg backdrop-blur-sm fixed text-center"
+            style={{
+              width: "150px",
+              left: tooltipPosition.x,
+              top: tooltipPosition.y,
+              transform: `translate(-50%, -50%)`,
+              zIndex: 9999,
+              pointerEvents: "none",
+            }}
+          >
+            <p className="text-white">
+              {address.slice(0, 4)}...{address.slice(-4)}
+            </p>
+            <p className="text-white">{`${size.toFixed(2)} $SKELETON`}</p>
+            <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
