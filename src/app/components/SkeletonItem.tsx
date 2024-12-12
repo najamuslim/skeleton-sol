@@ -1,6 +1,12 @@
 // components/Skeleton.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import BaseSkeleton from "../constants/skeletons/base";
+import Clothes5 from "../constants/skeletons/clothes/Clothes5";
+import Fingers7 from "../constants/skeletons/fingers/Fingers7";
+import Hats5 from "../constants/skeletons/hats/Hats5";
+import Shorts5 from "../constants/skeletons/shorts/Shorts5";
+import Shoes5 from "../constants/skeletons/shoes/Shoes5";
 
 interface SkeletonProps {
   address: string;
@@ -63,18 +69,18 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         const rect = elementRef.current.getBoundingClientRect();
         const scrollLeft = document.documentElement.scrollLeft || window.scrollX;
         const scrollTop = document.documentElement.scrollTop || window.scrollY;
-  
+
         setTooltipPosition({
           x: rect.left + rect.width / 2 + scrollLeft,
           y: rect.top + rect.height / 2 + scrollTop,
         });
       }
     };
-  
+
     window.addEventListener("scroll", updateTooltipPosition, true);
     window.addEventListener("resize", updateTooltipPosition, true);
     updateTooltipPosition();
-  
+
     return () => {
       window.removeEventListener("scroll", updateTooltipPosition, true);
       window.removeEventListener("resize", updateTooltipPosition, true);
@@ -109,7 +115,23 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
           transition: "all 0.3s ease",
         }}
       >
-        <rect
+        <BaseSkeleton />
+
+        {/* Clothes */}
+        <Clothes5 color='#6461F6' />
+
+        {/* Fingers */}
+        <Fingers7 />
+
+        {/* Hats */}
+        <Hats5 color='#6461F6' />
+
+        {/* Shoes */}
+        <Shoes5 color='#6461F6' />
+
+        {/* Shorts */}
+        <Shorts5 color='#6461F6' />
+        {/* <rect
           x="11"
           y="46"
           width="34"
@@ -120,7 +142,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         <ellipse cx="28" cy="36" rx="17" ry="14" fill="#ffffff" />
         <path d={hatPath} fill={`${color.hat}`} />
         <circle cx="11.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
-        <circle cx="45.5" cy="123.5" r="11.5" fill={`${color.shoes}`} />
+        <circle cx="45.5" cy="123.5" r="11.5" fill={`${color.shoes}`} /> */}
       </svg>
 
       {showTooltip &&

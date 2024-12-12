@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Skeleton from "./components/Skeleton";
 import Navbar from "./components/Navbar";
 import Recent from "./components/Recent";
+import Character from "./components/Character";
 
 export default function Home() {
   const [holders, setHolders] = useState<
