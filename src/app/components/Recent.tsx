@@ -56,7 +56,7 @@ const Recent: React.FC<SkeletonProps> = () => {
   }
 
   return (
-    <div className="fixed top-36 right-20 text-black">
+    <div className="fixed top-36 right-20 text-[#9B2823]">
       <div className="flex flex-col">
         <div className="bg-white shadow-lg">
           <button 

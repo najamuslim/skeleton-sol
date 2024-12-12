@@ -1,23 +1,11 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Afacad } from 'next/font/google';
+import { Pixelify_Sans } from 'next/font/google';
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
-const afacad = Afacad({
+const pixelifySans = Pixelify_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
-  variable: '--font-afacad',
+  variable: '--font-pixelify-sans',
 });
 
 export const metadata: Metadata = {
@@ -33,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${afacad.variable} font-afacad antialiased bg-slate-500`}
+        className={`${pixelifySans.variable} font-pixelify-sans antialiased bg-slate-500`}
       >
         {children}
       </body>

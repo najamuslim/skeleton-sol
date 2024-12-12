@@ -180,7 +180,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
             <p className="text-white">
               {address.slice(0, 4)}...{address.slice(-4)}
             </p>
-            <p className="text-white">{`${size.toFixed(2)} $SKELETON`}</p>
+            <p className="text-white">{`${size.toFixed(2)} $SKELLY`}</p>
             <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
           </div>,
           document.body
