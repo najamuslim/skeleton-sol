@@ -61,20 +61,23 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
     const updateTooltipPosition = () => {
       if (elementRef.current) {
         const rect = elementRef.current.getBoundingClientRect();
+        const scrollLeft = document.documentElement.scrollLeft || window.scrollX;
+        const scrollTop = document.documentElement.scrollTop || window.scrollY;
+  
         setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
+          x: rect.left + rect.width / 2 + scrollLeft,
+          y: rect.top + rect.height / 2 + scrollTop,
         });
       }
     };
-
-    window.addEventListener('scroll', updateTooltipPosition);
-    window.addEventListener('resize', updateTooltipPosition);
+  
+    window.addEventListener("scroll", updateTooltipPosition, true);
+    window.addEventListener("resize", updateTooltipPosition, true);
     updateTooltipPosition();
-
+  
     return () => {
-      window.removeEventListener('scroll', updateTooltipPosition);
-      window.removeEventListener('resize', updateTooltipPosition);
+      window.removeEventListener("scroll", updateTooltipPosition, true);
+      window.removeEventListener("resize", updateTooltipPosition, true);
     };
   }, []);
 
@@ -125,6 +128,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
           <div
             className="transition-opacity bg-black bg-opacity-60 p-2 rounded-lg backdrop-blur-sm fixed text-center"
             style={{
+              position: "absolute",
               width: "150px",
               left: tooltipPosition.x,
               top: tooltipPosition.y,

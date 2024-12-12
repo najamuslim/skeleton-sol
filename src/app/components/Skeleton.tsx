@@ -131,7 +131,7 @@ const Skeleton: React.FC<{
   };
 
   return (
-    <div className="flex-1 relative bg-[url('/grain.png')] bg-cover">
+    <div className="flex-1 relative bg-[url('/grain.png')] bg-cover pb-20 pt-4">
       <div
         ref={containerRef}
         style={{
