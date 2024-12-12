@@ -1,3 +1,26 @@
+export function getFingers(walletAddress: string, startRange: number, endRange: number) {
+  const keySegment = walletAddress.substring(startRange, endRange); 
+
+  // Hitung hash sederhana berdasarkan kode ASCII
+  const hashValue = keySegment.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+
+  // Map hash ke appearance
+  const appearances = ["1", "2", "3", "4", "5", "6", "7"];
+  return appearances[hashValue % appearances.length];
+}
+
+export function getDynamicAppearance(walletAddress: string, startRange: number, endRange: number) {
+  const keySegment = walletAddress.substring(startRange, endRange); // 23 karena 0-based index
+
+  // Hitung hash sederhana berdasarkan kode ASCII
+  const hashValue = keySegment.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+
+  // Map hash ke appearance
+  const appearances = ["1", "2", "3", "4", "5"];
+  return appearances[hashValue % appearances.length];
+}
+
+
 // Helper function to convert a hex string into a color
 export const addressToColor = (
   address: string,

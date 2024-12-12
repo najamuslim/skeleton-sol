@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import SkeletonItem from "./SkeletonItem";
-import { addressToColor } from "../helpers";
+import { addressToColor, getFingers, getDynamicAppearance } from "../helpers";
 
 const Skeleton: React.FC<{
   holders: Array<{ wallet: string; balance: number }>;
@@ -164,6 +164,14 @@ const Skeleton: React.FC<{
                   hat: addressToColor(item.wallet, 0, 6),
                   clothes: addressToColor(item.wallet, 6, 12),
                   shoes: addressToColor(item.wallet, 12, 18),
+                  shorts: addressToColor(item.wallet, 18, 24),
+                }}
+                appearance={{
+                  hat: getDynamicAppearance(item.wallet,0,6),
+                  clothes: getDynamicAppearance(item.wallet,6,12),
+                  shoes: getDynamicAppearance(item.wallet,12,18),
+                  shorts: getDynamicAppearance(item.wallet,18,24),
+                  fingers: getFingers(item.wallet,24,31),
                 }}
                 style={{
                   position: "absolute",
