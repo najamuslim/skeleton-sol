@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "distribute": "ts-node scripts/distributeTokens.ts"
+    "distribute": "ts-node scripts/distributeTokens.ts",
+    "generate-positions": "ts-node scripts/generatePositions.ts"
   },
   "dependencies": {
     "@solana/spl-token": "^0.4.9",
@@ -15,7 +16,9 @@
     "fs": "^0.0.1-security",
     "next": "15.0.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@tanstack/react-virtual": "^3.11.1",
+    "react-intersection-observer": "^9.13.1"
   },
   "devDependencies": {
     "@types/node": "^20",

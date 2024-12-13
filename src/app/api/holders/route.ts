@@ -2,6 +2,7 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import { NextResponse } from "next/server";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+//import precomputedPositions from "../data/precomputedPositions.json";
 
 const TOKEN_MINT_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_MINT_ADDRESS;
 const SOLANA_RPC_URL = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
@@ -52,10 +53,29 @@ export async function GET() {
           balance,
         };
       })
-      .filter((holder) => holder.balance > 0) // Hanya holders dengan saldo > 0
-      .sort((a, b) => b.balance - a.balance); // Urutkan berdasarkan saldo
+      .filter((holder) => holder.balance > 0); // Hanya holders dengan saldo > 0
 
     console.log(`Found ${holders.length} valid holders`);
+    // const processedHolders = holders.map((holder) => {
+    //   const position = precomputedPositions[holder.wallet as keyof typeof precomputedPositions] || {
+    //     x: 0,
+    //     y: 0,
+    //     size: 50,
+    //     rotation: 0,
+    //   };
+
+    //   return {
+    //     wallet: holder.wallet,
+    //     balance: holder.balance,
+    //     position: {
+    //       x: position.x,
+    //       y: position.y,
+    //       rotation: position.rotation,
+    //       size: 50 + Math.sqrt(holder.balance) * 10, // Update size based on actual balance
+    //     },
+    //   };
+    // });
+
     return NextResponse.json(holders);
   } catch (error: any) {
     console.error("API Error:", error);
