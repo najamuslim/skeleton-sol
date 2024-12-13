@@ -56,12 +56,12 @@ const Recent: React.FC<SkeletonProps> = () => {
   }
 
   return (
-    <div className="fixed top-36 right-20 text-[#9B2823]">
+    <div className="fixed top-24 md:top-36 right-4 md:right-20 text-[#9B2823]">
       <div className="flex flex-col">
         <div className="bg-white shadow-lg">
           <button 
             onClick={() => setActive(!isActive)}
-            className="px-3 py-1 hover:bg-gray-100 w-full text-left"
+            className="px-2 sm:px-3 py-1 hover:bg-gray-100 w-full text-left"
           >
             <span className={`
               inline-block transition-transform duration-300
@@ -70,8 +70,8 @@ const Recent: React.FC<SkeletonProps> = () => {
               {`>>>`}
             </span>
           </button>
-          <div className="px-4 pb-2">
-            <p className="font-bold text-xl">Recent Input</p>
+          <div className="px-2 md:px-4 pb-2">
+            <p className="font-bold text-sm sm:text-base md:text-xl">Recent Input</p>
           </div>
         </div>
 
@@ -81,14 +81,14 @@ const Recent: React.FC<SkeletonProps> = () => {
             transform transition-all duration-300 ease-in-out
             ${isActive 
               ? 'translate-x-0 opacity-100 h-auto' 
-              : 'translate-x-[24rem] opacity-0 h-0'
+              : 'translate-x-[16rem] sm:translate-x-[20rem] md:translate-x-[24rem] opacity-0 h-0'
             }
             overflow-hidden
           `}
         >
-          <div className="w-[24rem] px-4 pb-4">
-            <hr className="border border-black my-4" />
-            <div className="flex justify-between font-bold">
+          <div className="w-[16rem] sm:w-[20rem] md:w-[24rem] px-2 sm:px-3 md:px-4 pb-4">
+            <hr className="border border-black my-2 sm:my-4" />
+            <div className="flex justify-between font-bold text-sm sm:text-base">
               <p>Time</p>
               <p>From</p>
               <p>Amount</p>
@@ -97,7 +97,7 @@ const Recent: React.FC<SkeletonProps> = () => {
               transactions.map((tx, index) => (
                 <div
                   key={index}
-                  className="flex justify-between font-bold my-2"
+                  className="flex justify-between font-bold my-2 text-xs sm:text-sm md:text-base"
                 >
                   <p>{getTimeAgo(tx.timestamp)}</p>
                   <p className="w-1/3 truncate">{tx.from}</p>

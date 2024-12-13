@@ -56,27 +56,6 @@ interface SkeletonAppearance {
   fingers: string;
 }
 
-// Tambahkan konstanta untuk path options
-const HAT_PATHS = {
-  TRIANGLE: "M28.5 0L47.1195 27H9.88045L28.5 0Z",
-  STAR: "M28.5 0L34.2251 17.6201L52.7519 17.6201L37.7634 28.5099L43.4885 46.1299L28.5 35.2401L13.5115 46.1299L19.2366 28.5099L4.24806 17.6201L22.7749 17.6201L28.5 0Z",
-  HEXAGON: "M28.5 0L42.75 8.25V24.75L28.5 33L14.25 24.75V8.25L28.5 0Z",
-};
-
-const getHatPath = (address: string) => {
-  // Gunakan karakter terakhir dari address untuk memilih path
-  const lastChar = address.slice(-1);
-  const charCode = lastChar.charCodeAt(0);
-
-  // Bagi menjadi 3 kelompok berdasarkan charCode
-  if (charCode % 3 === 0) {
-    return HAT_PATHS.TRIANGLE;
-  } else if (charCode % 3 === 1) {
-    return HAT_PATHS.STAR;
-  } else {
-    return HAT_PATHS.HEXAGON;
-  }
-};
 
 const SkeletonItem: React.FC<SkeletonProps> = ({
   address,
@@ -92,7 +71,6 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
   console.log(appearance)
 
   const rotation = style?.transform?.match(/-?\d+/)?.[0] || 0;
-  const hatPath = getHatPath(address);
   const [showTooltip, setShowTooltip] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });

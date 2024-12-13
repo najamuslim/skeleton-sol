@@ -16,9 +16,9 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className='flex bg-[#9B2823] justify-between items-center py-5 px-12'>
+    <div className='flex bg-[#9B2823] justify-between items-center py-5 px-4 md:px-12 gap-2 md:gap-0'>
       <div>
-        <h1 className='text-[3.125rem] leading-none text-[#FFFFFF]'>SKELLY</h1>
+        <h1 className='text-[2rem] md:text-[3.125rem] leading-none text-[#FFFFFF]'>SKELLY</h1>
       </div>
       <form onSubmit={handleSubmit} className="flex items-center overflow-hidden bg-[#FFFFFF] px-3 rounded-sm h-10 self-center">
         <button type="submit">
