@@ -7,17 +7,24 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "distribute": "ts-node scripts/distributeTokens.ts"
+    "distribute": "ts-node scripts/distributeTokens.ts",
+    "generate-positions": "tsx ./scripts/generatePositions.ts"
   },
   "dependencies": {
+    "@nanostores/react": "^0.8.2",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.8",
+    "classnames": "^2.5.1",
     "fs": "^0.0.1-security",
+    "lodash": "^4.17.21",
+    "nanostores": "^0.11.3",
     "next": "15.0.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-fps": "^1.0.6"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -26,6 +33,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }

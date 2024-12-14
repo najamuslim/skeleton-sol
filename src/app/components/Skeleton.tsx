@@ -1,22 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import SkeletonItem from "./SkeletonItem";
 import { addressToColor, getFingers, getDynamicAppearance } from "../helpers";
+import { HolderData } from "@/types";
+import { throttle } from "lodash";
+import { $containerWidth, $scrollTop } from "../stores/holders";
 
 const Skeleton: React.FC<{
-  holders: Array<{ wallet: string; balance: number }>;
+  holders: Array<HolderData>;
   searchedAddress: string | null;
   supply: number | null;
-}> = ({ holders, searchedAddress, supply }) => {
+  height: number;
+}> = ({ holders, searchedAddress, supply, height }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
-        });
+        $containerWidth.set(containerRef.current.offsetWidth);
       }
     };
 
@@ -25,162 +26,149 @@ const Skeleton: React.FC<{
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  useEffect(() => {
-    if (searchedAddress) {
-      const skeletonElement = document.querySelector(
-        `[data-address="${searchedAddress}"]`
-      );
-      if (skeletonElement) {
-        skeletonElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        skeletonElement.classList.add("highlight-skeleton");
-        setTimeout(() => {
-          skeletonElement.classList.remove("highlight-skeleton");
-        }, 2000);
+  // const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // useEffect(() => {
+  //   const updateDimensions = () => {
+  //     if (containerRef.current) {
+  //       setDimensions({
+  //         width: containerRef.current.offsetWidth,
+  //         height: containerRef.current.offsetHeight,
+  //       });
+  //     }
+  //   };
+  //
+  //   updateDimensions();
+  //   window.addEventListener("resize", updateDimensions);
+  //   return () => window.removeEventListener("resize", updateDimensions);
+  // }, []);
+
+  // useEffect(() => {
+  //   if (searchedAddress) {
+  //     const skeletonElement = document.querySelector(
+  //       `[data-address="${searchedAddress}"]`,
+  //     );
+  //     if (skeletonElement) {
+  //       skeletonElement.scrollIntoView({ behavior: "smooth", block: "center" });
+  //       skeletonElement.classList.add("highlight-skeleton");
+  //       setTimeout(() => {
+  //         skeletonElement.classList.remove("highlight-skeleton");
+  //       }, 2000);
+  //     }
+  //   }
+  // }, [searchedAddress]);
+
+  const itemsRef = useRef<Array<HTMLDivElement>>([]);
+
+  const [viewportTop, setViewportTop] = useState(0);
+  const viewportBottom = useMemo(() => {
+    return viewportTop + (containerRef.current?.offsetHeight || 800);
+  }, [viewportTop, containerRef]);
+
+  const onScroll = useMemo(
+    () =>
+      throttle(
+        (e) => {
+          const viewportTop = containerRef.current?.scrollTop || 0;
+          setViewportTop(viewportTop);
+          $scrollTop.set(viewportTop);
+        },
+        100,
+        { leading: false },
+      ),
+    [],
+  );
+
+  // useEffect(() => {
+  //   console.log(holders.length);
+  // }, [holders]);
+  //
+  // useEffect(() => {
+  //   console.log(viewportTop, viewportBottom);
+  // }, [viewportTop, viewportBottom]);
+
+  const visibleItems = useMemo(() => {
+    return holders.filter((item, i) => {
+      const itemTop = item.position.y;
+      const itemBottom = item.position.y + item.position.size;
+
+      const safeArea = 0;
+      const top = viewportTop - safeArea;
+      const bottom = viewportBottom + safeArea;
+
+      if (itemBottom >= top && itemTop <= bottom) {
+        return true;
+      } else {
+        return false;
       }
-    }
-  }, [searchedAddress]);
-
-  const getPositions = () => {
-    const positions: Array<{
-      x: number;
-      y: number;
-      wallet: string;
-      balance: number;
-      rotation: number;
-    }> = [];
-
-    // Track occupied spaces with rectangles
-    const occupiedSpaces: Array<{
-      x1: number;
-      y1: number;
-      x2: number;
-      y2: number;
-    }> = [];
-
-    const doesOverlap = (
-      x: number,
-      y: number,
-      width: number,
-      height: number
-    ) => {
-      const margin = 2; // Extra space between skeletons
-      for (const space of occupiedSpaces) {
-        if (
-          !(
-            x + width + margin < space.x1 ||
-            x - margin > space.x2 ||
-            y + height + margin < space.y1 ||
-            y - margin > space.y2
-          )
-        ) {
-          return true;
-        }
-      }
-      return false;
-    };
-
-    const findValidPosition = (
-      skeletonWidth: number,
-      skeletonHeight: number
-    ) => {
-      let x = 0;
-      let y = 0;
-      let foundPosition = false;
-
-      while (!foundPosition) {
-        if (x + skeletonWidth > dimensions.width) {
-          x = 0;
-          y += 100; // Move to next row
-        }
-
-        if (!doesOverlap(x, y, skeletonWidth, skeletonHeight)) {
-          foundPosition = true;
-        } else {
-          x += 50; // Try next position
-        }
-      }
-
-      return { x, y };
-    };
-
-    holders.forEach((holder) => {
-      const skeletonSize = 50 + Math.sqrt(holder.balance) * 10;
-      const seed = parseInt(holder.wallet.slice(0, 8), 16);
-      const rotation = Math.sin(seed * 0.1) * 180; // Will give smooth random angles between -180 and 180
-
-      const { x, y } = findValidPosition(skeletonSize, skeletonSize);
-
-      positions.push({
-        x,
-        y,
-        wallet: holder.wallet,
-        balance: holder.balance,
-        rotation,
-      });
-
-      // Mark space as occupied
-      occupiedSpaces.push({
-        x1: x,
-        y1: y,
-        x2: x + skeletonSize,
-        y2: y + skeletonSize,
-      });
     });
+  }, [holders, viewportTop, viewportBottom]);
 
-    return positions;
-  };
+  const renderItems = useMemo(() => {
+    return visibleItems.map((item, i) => {
+      const { wallet, position } = item;
+      return (
+        <SkeletonItem
+          // ref={(el) => {
+          //   if (el) {
+          //     itemsRef.current[i] = el;
+          //   }
+          // }}
+          key={wallet}
+          address={wallet}
+          // size={position.balance * 0.7}
+          size={position.size}
+          x={position.x}
+          y={position.y}
+          color={{
+            hat: addressToColor(wallet, 0, 6),
+            clothes: addressToColor(wallet, 6, 12),
+            shoes: addressToColor(wallet, 12, 18),
+            shorts: addressToColor(wallet, 18, 24),
+          }}
+          appearance={{
+            hat: getDynamicAppearance(wallet, 0, 6),
+            clothes: getDynamicAppearance(wallet, 6, 12),
+            shoes: getDynamicAppearance(wallet, 12, 18),
+            shorts: getDynamicAppearance(wallet, 18, 24),
+            fingers: getFingers(wallet, 24, 31),
+          }}
+          style={{
+            position: "absolute",
+            transform: `rotate(${position.rotation}deg)`,
+          }}
+          isHighlighted={searchedAddress === wallet}
+          percentage={supply ? (position.balance / supply) * 100 : 0}
+        />
+      );
+    });
+  }, [visibleItems]);
 
   return (
     <div className="flex-1 relative bg-[url('/grain.png')] bg-cover pb-20 pt-4">
       <div
         ref={containerRef}
+        id="skeletonContainer"
+        onScroll={onScroll}
         style={{
           position: "relative",
           width: "90%",
           margin: "0px auto",
-          height: "100%",
+          maxHeight: "calc(100vh - 90px - 16px - 80px)",
           borderRadius: "0.5rem",
-          overflowY: "auto", 
+          overflowY: "scroll",
           overflowX: "hidden",
-          scrollbarWidth: "none",
         }}
+        className="scrollbar"
       >
         <div
           style={{
             position: "relative",
-            height: "100%",
+            height: height,
             padding: "40px 0",
           }}
         >
-          {dimensions.width > 0 &&
-            getPositions().map((item) => (
-              <SkeletonItem
-                key={item.wallet}
-                address={item.wallet}
-                size={item.balance * 0.7}
-                x={item.x}
-                y={item.y}
-                color={{
-                  hat: addressToColor(item.wallet, 0, 6),
-                  clothes: addressToColor(item.wallet, 6, 12),
-                  shoes: addressToColor(item.wallet, 12, 18),
-                  shorts: addressToColor(item.wallet, 18, 24),
-                }}
-                appearance={{
-                  hat: getDynamicAppearance(item.wallet,0,6),
-                  clothes: getDynamicAppearance(item.wallet,6,12),
-                  shoes: getDynamicAppearance(item.wallet,12,18),
-                  shorts: getDynamicAppearance(item.wallet,18,24),
-                  fingers: getFingers(item.wallet,24,31),
-                }}
-                style={{
-                  position: "absolute",
-                  transform: `rotate(${item.rotation}deg)`,
-                }}
-                isHighlighted={searchedAddress === item.wallet}
-                percentage={supply ? (item.balance / supply) * 100 : 0}
-              />
-            ))}
+          {renderItems}
         </div>
       </div>
       <img

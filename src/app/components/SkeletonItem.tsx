@@ -29,6 +29,8 @@ import Fingers4 from "../constants/skeletons/fingers/Fingers4";
 import Fingers5 from "../constants/skeletons/fingers/Fingers5";
 import Fingers6 from "../constants/skeletons/fingers/Fingers6";
 import Fingers2 from "../constants/skeletons/fingers/Fingers2";
+import { lerp, mapRange } from "../utils/math";
+import classNames from "classnames";
 
 interface SkeletonProps {
   address: string;
@@ -40,6 +42,7 @@ interface SkeletonProps {
   isHighlighted?: boolean;
   percentage: number;
   appearance: SkeletonAppearance;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 interface SkeletonColors {
@@ -56,7 +59,6 @@ interface SkeletonAppearance {
   fingers: string;
 }
 
-
 const SkeletonItem: React.FC<SkeletonProps> = ({
   address,
   style,
@@ -67,153 +69,202 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
   isHighlighted,
   percentage,
   appearance,
+  ref,
 }) => {
-  console.log(appearance)
+  // console.log(appearance)
 
   const rotation = style?.transform?.match(/-?\d+/)?.[0] || 0;
   const [showTooltip, setShowTooltip] = useState(false);
-  const elementRef = useRef<HTMLDivElement>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
+  const [isShow, setIsShow] = useState(false);
+  const [animating, setAnimating] = useState(true);
+
   useEffect(() => {
-    const updateTooltipPosition = () => {
-      if (elementRef.current) {
-        const rect = elementRef.current.getBoundingClientRect();
-        const scrollLeft = document.documentElement.scrollLeft || window.scrollX;
-        const scrollTop = document.documentElement.scrollTop || window.scrollY;
-
-        setTooltipPosition({
-          x: rect.left + rect.width / 2 + scrollLeft,
-          y: rect.top + rect.height / 2 + scrollTop,
-        });
-      }
-    };
-
-    window.addEventListener("scroll", updateTooltipPosition, true);
-    window.addEventListener("resize", updateTooltipPosition, true);
-    updateTooltipPosition();
-
-    return () => {
-      window.removeEventListener("scroll", updateTooltipPosition, true);
-      window.removeEventListener("resize", updateTooltipPosition, true);
-    };
+    setTimeout(() => {
+      setIsShow(true);
+      setAnimating(false);
+    }, 50);
   }, []);
+
+  // useEffect(() => {
+  //   const updateTooltipPosition = () => {
+  //     if (elementRef.current) {
+  //       const rect = elementRef.current.getBoundingClientRect();
+  //       const scrollLeft =
+  //         document.documentElement.scrollLeft || window.scrollX;
+  //       const scrollTop = document.documentElement.scrollTop || window.scrollY;
+  //
+  //       setTooltipPosition({
+  //         x: rect.left + rect.width / 2 + scrollLeft,
+  //         y: rect.top + rect.height / 2 + scrollTop,
+  //       });
+  //     }
+  //   };
+  //
+  //   window.addEventListener("scroll", updateTooltipPosition, true);
+  //   window.addEventListener("resize", updateTooltipPosition, true);
+  //   updateTooltipPosition();
+  //
+  //   return () => {
+  //     window.removeEventListener("scroll", updateTooltipPosition, true);
+  //     window.removeEventListener("resize", updateTooltipPosition, true);
+  //   };
+  // }, []);
 
   return (
     <div
-      ref={elementRef}
+      ref={ref}
       data-address={address}
       style={{
         left: x,
         top: y,
-        position: "absolute",
-        transform: `rotate(${rotation}deg)`,
+        width: size,
+        height: size,
       }}
-      className="group cursor-pointer relative"
+      className="absolute group cursor-pointer"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <svg
-        width={40 + Math.sqrt(size) * 8}
-        height={40 + Math.sqrt(size) * 8}
-        viewBox="0 0 57 135"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className={`${isHighlighted ? "highlight-skeleton" : ""} relative z-10`}
+      <div
+        className="absolute inset-0"
         style={{
-          filter: isHighlighted
-            ? "drop-shadow(0 0 15px rgba(255, 255, 255, 0.7))"
-            : "none",
-          transition: "all 0.3s ease",
+          transform: `rotate(${rotation}deg)`,
         }}
       >
-        {/* Base */}
-        <BaseSkeleton />
-        {/* Hat */}
-        {renderAppearance('hat', appearance.hat, color)}
-        {/* Clothes */}
-        {renderAppearance('clothes', appearance.clothes, color)}
-        {/* Shoes */}
-        {renderAppearance('shoes', appearance.shoes, color)}
-        {/* Shorts */}
-        {renderAppearance('shorts', appearance.shorts, color)}
-        {/* Fingers */}
-        {renderAppearance('fingers', appearance.fingers, color)}
-      </svg>
-
-      {showTooltip &&
-        createPortal(
-          <div
-            className="transition-opacity bg-black bg-opacity-60 p-2 rounded-lg backdrop-blur-sm fixed text-center"
+        <div
+          className={classNames("absolute inset-0 transition duration-200", {
+            "scale-0": !isShow,
+            "scale-125": isShow,
+          })}
+        >
+          <svg
+            width={size}
+            height={size}
+            viewBox="0 0 108 108"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={`absolute ${isHighlighted ? "highlight-skeleton" : ""} relative z-10`}
             style={{
-              position: "absolute",
-              width: "150px",
-              left: tooltipPosition.x,
-              top: tooltipPosition.y,
-              transform: `translate(-50%, -50%)`,
-              zIndex: 9999,
-              pointerEvents: "none",
+              filter: isHighlighted
+                ? "drop-shadow(0 0 15px rgba(255, 255, 255, 0.7))"
+                : "none",
+              // transition: "all 0.3s ease",
             }}
           >
-            <p className="text-white">
-              {address.slice(0, 4)}...{address.slice(-4)}
-            </p>
-            <p className="text-white">{`${size.toFixed(2)} $SKELLY`}</p>
-            <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
-          </div>,
-          document.body
-        )}
+            <BaseSkeleton />
+          </svg>
+
+          {renderAppearance("hat", appearance.hat, color)}
+          {renderAppearance("clothes", appearance.clothes, color)}
+          {renderAppearance("shoes", appearance.shoes, color)}
+          {renderAppearance("shorts", appearance.shorts, color)}
+          {renderAppearance("fingers", appearance.fingers, color)}
+        </div>
+      </div>
+
+      {showTooltip && (
+        <div
+          className="transition-opacity bg-black bg-opacity-60 p-2 rounded-lg backdrop-blur-sm fixed text-center"
+          style={{
+            position: "absolute",
+            width: "150px",
+            // left: tooltipPosition.x,
+            // top: tooltipPosition.y,
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%, -50%)`,
+            zIndex: 9999,
+            pointerEvents: "none",
+          }}
+        >
+          <p className="text-white">
+            {address.slice(0, 4)}...{address.slice(-4)}
+          </p>
+          <p className="text-white">{`${size.toFixed(2)} $SKELLY`}</p>
+          <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
+        </div>
+      )}
     </div>
   );
 };
 
-
 function renderAppearance(type: string, value: string, color: SkeletonColors) {
   switch (type) {
-    case 'hat':
+    case "hat":
       switch (value) {
-        case '1': return <Hats1 color={color.hat} />;
-        case '2': return <Hats2 color={color.hat} />;
-        case '3': return <Hats3 color={color.hat} />;
-        case '4': return <Hats4 color={color.hat} />;
-        default: return <Hats1 color={color.hat} />;
+        case "1":
+          return <Hats1 color={color.hat} />;
+        case "2":
+          return <Hats2 color={color.hat} />;
+        case "3":
+          return <Hats3 color={color.hat} />;
+        case "4":
+          return <Hats4 color={color.hat} />;
+        default:
+          return <Hats1 color={color.hat} />;
       }
-    case 'clothes':
+    case "clothes":
       switch (value) {
-        case '1': return <Clothes1 color={color.clothes} />;
-        case '2': return <Clothes2 color={color.clothes} />;
-        case '3': return <Clothes3 color={color.clothes} />;
-        case '4': return <Clothes4 color={color.clothes} />;
-        case '5': return <Clothes5 color={color.clothes} />;
-        default: return <Clothes1 color={color.clothes} />;
+        case "1":
+          return <Clothes1 color={color.clothes} />;
+        case "2":
+          return <Clothes2 color={color.clothes} />;
+        case "3":
+          return <Clothes3 color={color.clothes} />;
+        case "4":
+          return <Clothes4 color={color.clothes} />;
+        case "5":
+          return <Clothes5 color={color.clothes} />;
+        default:
+          return <Clothes1 color={color.clothes} />;
       }
-    case 'shoes':
+    case "shoes":
       switch (value) {
-        case '1': return <Shoes1 color={color.shoes} />;
-        case '2': return <Shoes2 color={color.shoes} />;
-        case '3': return <Shoes3 color={color.shoes} />;
-        case '4': return <Shoes4 color={color.shoes} />;
-        default: return <Shoes1 color={color.shoes} />;
+        case "1":
+          return <Shoes1 color={color.shoes} />;
+        case "2":
+          return <Shoes2 color={color.shoes} />;
+        case "3":
+          return <Shoes3 color={color.shoes} />;
+        case "4":
+          return <Shoes4 color={color.shoes} />;
+        default:
+          return <Shoes1 color={color.shoes} />;
       }
-    case 'shorts':
+    case "shorts":
       switch (value) {
-        case '1': return <Shorts1 color={color.shorts} />;
-        case '2': return <Shorts2 color={color.shorts} />;
-        case '3': return <Shorts3 color={color.shorts} />;
-        case '4': return <Shorts4 color={color.shorts} />;
-        case '5': return <Shorts5 color={color.shorts} />;
-        default: return <Shorts1 color={color.shorts} />;
+        case "1":
+          return <Shorts1 color={color.shorts} />;
+        case "2":
+          return <Shorts2 color={color.shorts} />;
+        case "3":
+          return <Shorts3 color={color.shorts} />;
+        case "4":
+          return <Shorts4 color={color.shorts} />;
+        case "5":
+          return <Shorts5 color={color.shorts} />;
+        default:
+          return <Shorts1 color={color.shorts} />;
       }
-    case 'fingers':
+    case "fingers":
       switch (value) {
-        case '1': return <Fingers1 />;
-        case '2': return <Fingers2 />;
-        case '3': return <Fingers3 />;
-        case '4': return <Fingers4 />;
-        case '5': return <Fingers5 />;
-        case '6': return <Fingers6 />;
-        case '7': return <Fingers7 />;
-        default: return <Fingers1 />;
+        case "1":
+          return <Fingers1 />;
+        case "2":
+          return <Fingers2 />;
+        case "3":
+          return <Fingers3 />;
+        case "4":
+          return <Fingers4 />;
+        case "5":
+          return <Fingers5 />;
+        case "6":
+          return <Fingers6 />;
+        case "7":
+          return <Fingers7 />;
+        default:
+          return <Fingers1 />;
       }
     default:
       return <div>Component type {type} not recognized</div>;

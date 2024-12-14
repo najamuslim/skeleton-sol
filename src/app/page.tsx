@@ -1,16 +1,37 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Skeleton from "./components/Skeleton";
 import Navbar from "./components/Navbar";
 import Recent from "./components/Recent";
 import Character from "./components/Character";
+import { Holder, HolderData } from "@/types";
+import { FpsView } from "react-fps";
+import { useStore } from "@nanostores/react";
+import {
+  $holders,
+  $holdersData,
+  $holdersDataChunk,
+  $maxY,
+} from "./stores/holders";
+
+// const data: Array<HolderData> = Object.entries(precomputedPositions).map(
+//   ([wallet, position]) => ({
+//     wallet,
+//     position,
+//   }),
+// );
+//
+// const maxY = Math.max(...data.map(({ position }) => position.y));
 
 export default function Home() {
-  const [holders, setHolders] = useState<
-    Array<{ wallet: string; balance: number }>
-  >([]);
+  // const [holders, setHolders] = useState<Array<Holder>>([]);
+  const holders = useStore($holders);
   const [searchedAddress, setSearchedAddress] = useState<string | null>(null);
   const [supply, setSupply] = useState<number | null>(null);
+
+  // current chunk of holders data
+  const data = useStore($holdersDataChunk);
+  const maxY = useStore($maxY);
 
   const handleSearch = (address: string) => {
     const addressExists = holders.some((holder) => holder.wallet === address);
@@ -28,9 +49,10 @@ export default function Home() {
           (holder: { wallet: string; balance: bigint }) => ({
             wallet: holder.wallet,
             balance: Number(holder.balance) / 1e9,
-          })
+          }),
         );
-        setHolders(convertedData);
+        // setHolders(convertedData);
+        $holders.set(convertedData);
       } catch (error) {
         console.error("Failed to fetch holders:", error);
       }
@@ -45,17 +67,42 @@ export default function Home() {
       }
     };
 
-    fetchSupply();
-    fetchHolders();
+    // fetchSupply();
+    // fetchHolders();
+
+    async function fetchDummyHolders() {
+      try {
+        const response = await fetch("/holders10k.json");
+        const data = await response.json();
+        // console.log(data.length);
+
+        const convertedData = data.map(
+          (holder: { address: string; balance: bigint }) => ({
+            wallet: holder.address,
+            balance: Number(holder.balance) / 1e9,
+          }),
+        );
+
+        // console.log(convertedData);
+        // setHolders(convertedData);
+        $holders.set(convertedData);
+      } catch (error) {
+        console.error("Failed to fetch holders:", error);
+      }
+    }
+
+    fetchDummyHolders();
   }, []);
 
   return (
     <div className="flex flex-col h-screen">
+      {/* <FpsView /> */}
       <Navbar onSearch={handleSearch} />
       <Skeleton
-        holders={holders}
+        holders={data}
         searchedAddress={searchedAddress}
         supply={supply}
+        height={maxY}
       />
       <Recent />
     </div>

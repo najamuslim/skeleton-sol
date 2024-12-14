@@ -5,7 +5,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-pixelify-sans: 'Pixelify Sans', sans-serif;
+  --font-pixelify-sans: "Pixelify Sans", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,7 +38,8 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -54,4 +55,24 @@ body {
   filter: brightness(1.2);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
+}
+
+/* width */
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #9b2823;
+}
+
+/* Handle on hover */
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ab3833;
 }
