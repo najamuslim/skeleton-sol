@@ -34,9 +34,10 @@ const Recent: React.FC<SkeletonProps> = () => {
       }
     };
 
-    fetchTransactions();
-    const interval = setInterval(fetchTransactions, 60000);
-    return () => clearInterval(interval);
+    // TODO: disable first because we are using dummy fetch
+    // fetchTransactions();
+    // const interval = setInterval(fetchTransactions, 60000);
+    // return () => clearInterval(interval);
   }, []);
 
   const getTimeAgo = (timestamp: string | null) => {
@@ -59,29 +60,34 @@ const Recent: React.FC<SkeletonProps> = () => {
     <div className="fixed top-24 md:top-36 right-4 md:right-20 text-[#9B2823]">
       <div className="flex flex-col">
         <div className="bg-white shadow-lg">
-          <button 
+          <button
             onClick={() => setActive(!isActive)}
             className="px-2 sm:px-3 py-1 hover:bg-gray-100 w-full text-left"
           >
-            <span className={`
+            <span
+              className={`
               inline-block transition-transform duration-300
-              ${isActive ? 'rotate-180' : ''}
-            `}>
+              ${isActive ? "rotate-180" : ""}
+            `}
+            >
               {`>>>`}
             </span>
           </button>
           <div className="px-2 md:px-4 pb-2">
-            <p className="font-bold text-sm sm:text-base md:text-xl">Recent Input</p>
+            <p className="font-bold text-sm sm:text-base md:text-xl">
+              Recent Input
+            </p>
           </div>
         </div>
 
-        <div 
+        <div
           className={`
             bg-white shadow-lg
             transform transition-all duration-300 ease-in-out
-            ${isActive 
-              ? 'translate-x-0 opacity-100 h-auto' 
-              : 'translate-x-[16rem] sm:translate-x-[20rem] md:translate-x-[24rem] opacity-0 h-0'
+            ${
+              isActive
+                ? "translate-x-0 opacity-100 h-auto"
+                : "translate-x-[16rem] sm:translate-x-[20rem] md:translate-x-[24rem] opacity-0 h-0"
             }
             overflow-hidden
           `}

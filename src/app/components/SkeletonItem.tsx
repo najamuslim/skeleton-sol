@@ -1,5 +1,5 @@
 // components/Skeleton.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import BaseSkeleton from "../constants/skeletons/base";
 import Clothes5 from "../constants/skeletons/clothes/Clothes5";
@@ -29,7 +29,6 @@ import Fingers4 from "../constants/skeletons/fingers/Fingers4";
 import Fingers5 from "../constants/skeletons/fingers/Fingers5";
 import Fingers6 from "../constants/skeletons/fingers/Fingers6";
 import Fingers2 from "../constants/skeletons/fingers/Fingers2";
-import { lerp, mapRange } from "../utils/math";
 import classNames from "classnames";
 
 interface SkeletonProps {
@@ -75,15 +74,13 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
 
   const rotation = style?.transform?.match(/-?\d+/)?.[0] || 0;
   const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  // const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   const [isShow, setIsShow] = useState(false);
-  const [animating, setAnimating] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setIsShow(true);
-      setAnimating(false);
     }, 50);
   }, []);
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import SkeletonItem from "./SkeletonItem";
 import { addressToColor, getFingers, getDynamicAppearance } from "../helpers";
@@ -58,20 +57,22 @@ const Skeleton: React.FC<{
   //   }
   // }, [searchedAddress]);
 
-  const itemsRef = useRef<Array<HTMLDivElement>>([]);
+  // const itemsRef = useRef<Array<HTMLDivElement>>([]);
 
   const [viewportTop, setViewportTop] = useState(0);
+
   const viewportBottom = useMemo(() => {
     return viewportTop + (containerRef.current?.offsetHeight || 800);
   }, [viewportTop, containerRef]);
 
+  // scroll handle
   const onScroll = useMemo(
     () =>
       throttle(
-        (e) => {
+        () => {
           const viewportTop = containerRef.current?.scrollTop || 0;
           setViewportTop(viewportTop);
-          $scrollTop.set(viewportTop);
+          $scrollTop.set(viewportTop); // also save to store
         },
         100,
         { leading: false },
@@ -79,20 +80,13 @@ const Skeleton: React.FC<{
     [],
   );
 
-  // useEffect(() => {
-  //   console.log(holders.length);
-  // }, [holders]);
-  //
-  // useEffect(() => {
-  //   console.log(viewportTop, viewportBottom);
-  // }, [viewportTop, viewportBottom]);
-
+  // filter holders data which are visible in viewport
   const visibleItems = useMemo(() => {
-    return holders.filter((item, i) => {
+    return holders.filter((item) => {
       const itemTop = item.position.y;
       const itemBottom = item.position.y + item.position.size;
 
-      const safeArea = 0;
+      const safeArea = 0; // we can also add some safe area to avoid clipping
       const top = viewportTop - safeArea;
       const bottom = viewportBottom + safeArea;
 
@@ -104,8 +98,9 @@ const Skeleton: React.FC<{
     });
   }, [holders, viewportTop, viewportBottom]);
 
+  // render item based on visibleItems
   const renderItems = useMemo(() => {
-    return visibleItems.map((item, i) => {
+    return visibleItems.map((item) => {
       const { wallet, position } = item;
       return (
         <SkeletonItem
@@ -142,7 +137,7 @@ const Skeleton: React.FC<{
         />
       );
     });
-  }, [visibleItems]);
+  }, [visibleItems, searchedAddress, supply]);
 
   return (
     <div className="flex-1 relative bg-[url('/grain.png')] bg-cover pb-20 pt-4">

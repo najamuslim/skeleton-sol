@@ -174,8 +174,8 @@ $holdersData.subscribe((value) => {
   // const noMoreChunk = value.length <= chunkSize;
 
   if (value.length > 0 && currentChunkIdx === 0) {
+    getChunkDataAndUpdate(currentChunkIdx);
     const nextChunkIdx = 1;
     $currentChunkIdx.set(nextChunkIdx);
-    getChunkDataAndUpdate(currentChunkIdx);
   }
 });

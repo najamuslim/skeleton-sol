@@ -1,27 +1,11 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Skeleton from "./components/Skeleton";
 import Navbar from "./components/Navbar";
 import Recent from "./components/Recent";
-import Character from "./components/Character";
-import { Holder, HolderData } from "@/types";
-import { FpsView } from "react-fps";
+// import { FpsView } from "react-fps";
 import { useStore } from "@nanostores/react";
-import {
-  $holders,
-  $holdersData,
-  $holdersDataChunk,
-  $maxY,
-} from "./stores/holders";
-
-// const data: Array<HolderData> = Object.entries(precomputedPositions).map(
-//   ([wallet, position]) => ({
-//     wallet,
-//     position,
-//   }),
-// );
-//
-// const maxY = Math.max(...data.map(({ position }) => position.y));
+import { $holders, $holdersDataChunk, $maxY } from "./stores/holders";
 
 export default function Home() {
   // const [holders, setHolders] = useState<Array<Holder>>([]);
@@ -67,6 +51,7 @@ export default function Home() {
       }
     };
 
+    // TODO: disable first because we are using dummy fetch
     // fetchSupply();
     // fetchHolders();
 
@@ -74,8 +59,6 @@ export default function Home() {
       try {
         const response = await fetch("/holders10k.json");
         const data = await response.json();
-        // console.log(data.length);
-
         const convertedData = data.map(
           (holder: { address: string; balance: bigint }) => ({
             wallet: holder.address,
@@ -84,7 +67,6 @@ export default function Home() {
         );
 
         // console.log(convertedData);
-        // setHolders(convertedData);
         $holders.set(convertedData);
       } catch (error) {
         console.error("Failed to fetch holders:", error);
