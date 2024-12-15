@@ -5,12 +5,19 @@ import Navbar from "./components/Navbar";
 import Recent from "./components/Recent";
 // import { FpsView } from "react-fps";
 import { useStore } from "@nanostores/react";
-import { $holders, $holdersDataChunk, $maxY, $supply } from "./stores/holders";
+import {
+  $holders,
+  $holdersData,
+  $holdersDataChunk,
+  $maxY,
+  $selectedHolder,
+  $supply,
+} from "./stores/holders";
 import { Holder } from "@/types";
 
 export default function Home() {
   // const [holders, setHolders] = useState<Array<Holder>>([]);
-  const holders = useStore($holders);
+  // const holders = useStore($holders);
   const [searchedAddress, setSearchedAddress] = useState<string | null>(null);
   const [supply, setSupply] = useState<number | null>(null);
 
@@ -19,9 +26,13 @@ export default function Home() {
   const maxY = useStore($maxY);
 
   const handleSearch = (address: string) => {
-    const addressExists = holders.some((holder) => holder.wallet === address);
-    if (addressExists) {
+    const holder = $holdersData
+      .get()
+      .find((holder) => holder.wallet === address);
+
+    if (holder) {
       setSearchedAddress(address);
+      $selectedHolder.set(holder);
     }
   };
 

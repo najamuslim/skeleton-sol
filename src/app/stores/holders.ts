@@ -31,6 +31,8 @@ $occupiedSpaces.listen((spaces) =>
 // store calculated holder data with position, rotation, and size
 export const $holdersData = atom<Array<HolderData>>([]);
 
+export const $selectedHolder = atom<HolderData | null>(null);
+
 $holdersData.subscribe((value) =>
   log.info("calculated holdersData total:", value.length),
 );

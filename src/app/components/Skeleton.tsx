@@ -3,7 +3,13 @@ import SkeletonItem from "./SkeletonItem";
 import { addressToColor, getFingers, getDynamicAppearance } from "../helpers";
 import { HolderData } from "@/types";
 import { throttle } from "lodash";
-import { $containerWidth, $scrollTop, $worker } from "../stores/holders";
+import {
+  $containerWidth,
+  $scrollTop,
+  $selectedHolder,
+  $worker,
+} from "../stores/holders";
+import { useStore } from "@nanostores/react";
 
 const Skeleton: React.FC<{
   holders: Array<HolderData>;
@@ -12,6 +18,8 @@ const Skeleton: React.FC<{
   height: number;
 }> = ({ holders, searchedAddress, supply, height }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const selectedHolder = useStore($selectedHolder);
 
   // create web worker and store
   useEffect(() => {
@@ -60,29 +68,31 @@ const Skeleton: React.FC<{
   // }, []);
 
   useEffect(() => {
-    if (searchedAddress) {
-      console.log("skeleton searchedAddress:", searchedAddress);
+    if (selectedHolder) {
+      // console.log("skeleton searchedAddress:", selectedHolder.wallet);
+
+      containerRef.current?.scrollTo({
+        top: selectedHolder.position.y,
+        behavior: "smooth",
+      });
 
       const skeletonElement = document.querySelector(
-        `[data-address="${searchedAddress}"]`,
+        `[data-address="${selectedHolder.wallet}"]`,
       );
-
-      console.log("skeletonElement:", skeletonElement);
 
       if (skeletonElement) {
         // skeletonElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        containerRef.current?.scrollTo({
-          top: (skeletonElement as HTMLDivElement).offsetTop,
-          behavior: "smooth",
-        });
 
         skeletonElement.classList.add("highlight-skeleton");
+
         setTimeout(() => {
           skeletonElement.classList.remove("highlight-skeleton");
         }, 2000);
       }
+
+      $selectedHolder.set(null);
     }
-  }, [searchedAddress]);
+  }, [selectedHolder]);
 
   // const itemsRef = useRef<Array<HTMLDivElement>>([]);
 
