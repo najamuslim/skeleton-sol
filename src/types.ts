@@ -29,9 +29,9 @@ export interface WorkerMessage<T> {
 }
 
 export type WorkerGeneratePositionsData = {
-  chunkIdx: number;
+  // chunkIdx: number;
   items: Holder[];
-  occupiedSpaces: OccupiedSpace[];
+  // occupiedSpaces: OccupiedSpace[];
   containerWidth: number;
 };
 

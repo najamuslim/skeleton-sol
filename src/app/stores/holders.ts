@@ -52,7 +52,7 @@ function workerSendMessage<T>(data: WorkerMessage<T>) {
 }
 
 function handleGeneratePositionsResult(result: WorkerGeneratePositionsResult) {
-  console.log("handleGeneratePositionsResult chunkIdx:", result.chunkIdx);
+  console.log("Main: handleGeneratePositionsResult chunkIdx:", result);
 
   $occupiedSpaces.set([...$occupiedSpaces.get(), ...result.occupiedSpaces]);
 
@@ -63,6 +63,10 @@ function handleGeneratePositionsResult(result: WorkerGeneratePositionsResult) {
 
 // store occupied spaces of the skeleton container
 const $occupiedSpaces = atom<OccupiedSpace[]>([]);
+
+$occupiedSpaces.listen((value) =>
+  console.log("occupiedSpaces total:", value.length),
+);
 
 // store calculated holder data with position, rotation, and size
 export const $holdersData = atom<Array<HolderData>>([]);
@@ -97,59 +101,73 @@ export const $holdersDataChunk = atom<Array<HolderData>>([]);
 
 // TODO: should move to Web Worker to avoid blocking UI
 // process the chunk
-async function processChunk(items: Holder[]) {
-  const { positions, occupiedSpaces } = await generatePositions(
-    items,
-    $occupiedSpaces.get(),
-    $containerWidth.get(),
-  );
+// async function processChunk(items: Holder[]) {
+//   const { positions, occupiedSpaces } = await generatePositions(
+//     items,
+//     $occupiedSpaces.get(),
+//     $containerWidth.get(),
+//   );
+//
+//   $occupiedSpaces.set([...$occupiedSpaces.get(), ...occupiedSpaces]);
+//
+//   $holdersData.set([...$holdersData.get(), ...positions]);
+// }
 
-  $occupiedSpaces.set([...$occupiedSpaces.get(), ...occupiedSpaces]);
+// send message to worker to process data
+// function workerProcessChunk(chunkIdx: number, items: Holder[]) {
+//   workerSendMessage<WorkerGeneratePositionsData>({
+//     event: "generatePositions",
+//     data: {
+//       chunkIdx,
+//       items,
+//       occupiedSpaces: $occupiedSpaces.get(),
+//       containerWidth: $containerWidth.get(),
+//     },
+//   });
+// }
 
-  $holdersData.set([...$holdersData.get(), ...positions]);
-}
-
-// send message to worker and process data
-function workerProcessChunk(chunkIdx: number, items: Holder[]) {
+// send message to worker to generate positions
+function workerGeneratePositions(items: readonly Holder[]) {
   workerSendMessage<WorkerGeneratePositionsData>({
     event: "generatePositions",
     data: {
-      chunkIdx,
-      items,
-      occupiedSpaces: $occupiedSpaces.get(),
+      items: items as Holder[],
       containerWidth: $containerWidth.get(),
     },
   });
 }
 
 // process holders data in chunks
-const processDataInChunks = (data: readonly Holder[]) => {
-  // const totalChunks = Math.ceil(data.length / chunkSize);
-  const totalChunks = 5; // TODO: LIMIT CHUNKS
-
-  for (let i = 0; i < totalChunks; i++) {
-    const start = i * chunkSize;
-    const end = Math.min(start + chunkSize, data.length);
-    const chunk = data.slice(start, end);
-    if (chunk.length > 0) {
-      // local process chunk
-      // setTimeout(
-      //   (function (chunk) {
-      //     return function () {
-      //       processChunk(chunk);
-      //     };
-      //   })(chunk),
-      //   0,
-      // );
-
-      // send message to worker
-      workerProcessChunk(i, chunk);
-    }
-  }
-};
+// const processDataInChunks = (data: readonly Holder[]) => {
+//   // const totalChunks = Math.ceil(data.length / chunkSize);
+//   const totalChunks = 5; // TODO: LIMIT CHUNKS
+//
+//   for (let i = 0; i < totalChunks; i++) {
+//     const start = i * chunkSize;
+//     const end = Math.min(start + chunkSize, data.length);
+//     const chunk = data.slice(start, end);
+//     if (chunk.length > 0) {
+//       // local process chunk
+//       // setTimeout(
+//       //   (function (chunk) {
+//       //     return function () {
+//       //       processChunk(chunk);
+//       //     };
+//       //   })(chunk),
+//       //   0,
+//       // );
+//
+//       // send message to worker
+//       workerProcessChunk(i, chunk);
+//     }
+//   }
+// };
 
 // subscribe to holders data and generate positions in chunks
-$holders.subscribe((value) => processDataInChunks(value));
+$holders.subscribe((value) => {
+  // processDataInChunks(value)
+  workerGeneratePositions(value);
+});
 
 // get chunk data of specified index, and update holdersDataChunk
 function getChunkDataAndUpdate(chunkIdx: number) {
