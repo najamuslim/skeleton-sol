@@ -13,6 +13,25 @@ const Skeleton: React.FC<{
 }> = ({ holders, searchedAddress, supply, height }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // create web worker
+  useEffect(() => {
+    const worker = new Worker(new URL("../workers/worker.ts", import.meta.url));
+
+    // set up an event listener for the worker's message event
+    worker.onmessage = (event) => {
+      console.log("Worker message received:", event.data);
+    };
+
+    // send a message to the worker
+    worker.postMessage(10);
+
+    // Clean up the worker when the component unmounts
+    return () => {
+      worker.terminate();
+    };
+  }, []);
+
+  // update width of the viewport
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {

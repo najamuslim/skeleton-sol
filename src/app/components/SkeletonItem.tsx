@@ -30,6 +30,7 @@ import Fingers5 from "../constants/skeletons/fingers/Fingers5";
 import Fingers6 from "../constants/skeletons/fingers/Fingers6";
 import Fingers2 from "../constants/skeletons/fingers/Fingers2";
 import classNames from "classnames";
+import { $holdersData } from "../stores/holders";
 
 interface SkeletonProps {
   address: string;
@@ -122,6 +123,12 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
       className="absolute group cursor-pointer"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
+      onClick={() => {
+        const idx = $holdersData
+          .get()
+          .findIndex((holder) => holder.wallet === address);
+        console.log("skeleton index:", idx);
+      }}
     >
       <div
         className="absolute inset-0"
