@@ -25,6 +25,10 @@ const Skeleton: React.FC<{
     };
   }, []);
 
+  // useEffect(() => {
+  //   console.log("supply:", supply);
+  // }, [supply]);
+
   // update width of the viewport
   useEffect(() => {
     const updateDimensions = () => {
@@ -125,6 +129,7 @@ const Skeleton: React.FC<{
           key={wallet}
           address={wallet}
           // size={position.balance * 0.7}
+          balance={position.balance}
           size={position.size}
           x={position.x}
           y={position.y}

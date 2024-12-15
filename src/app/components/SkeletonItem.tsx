@@ -37,6 +37,7 @@ interface SkeletonProps {
   style?: React.CSSProperties;
   color: SkeletonColors;
   size: number;
+  balance: number;
   x: number;
   y: number;
   isHighlighted?: boolean;
@@ -64,6 +65,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
   style,
   color,
   size,
+  balance,
   x,
   y,
   isHighlighted,
@@ -185,7 +187,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
           <p className="text-white">
             {address.slice(0, 4)}...{address.slice(-4)}
           </p>
-          <p className="text-white">{`${size.toFixed(2)} $SKELLY`}</p>
+          <p className="text-white">{`${balance.toFixed(2)} $SKELLY`}</p>
           <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
         </div>
       )}

@@ -6,6 +6,7 @@ import Recent from "./components/Recent";
 // import { FpsView } from "react-fps";
 import { useStore } from "@nanostores/react";
 import { $holders, $holdersDataChunk, $maxY } from "./stores/holders";
+import { Holder } from "@/types";
 
 export default function Home() {
   // const [holders, setHolders] = useState<Array<Holder>>([]);
@@ -58,16 +59,23 @@ export default function Home() {
     async function fetchDummyHolders() {
       try {
         const response = await fetch("/holders10k.json");
-        const data = await response.json();
-        const convertedData = data.map(
-          (holder: { address: string; balance: bigint }) => ({
-            wallet: holder.address,
-            balance: Number(holder.balance) / 1e9,
-          }),
-        );
+        const data: { address: string; balance: number }[] =
+          await response.json();
+        const convertedData: Holder[] = data.map((holder) => ({
+          wallet: holder.address,
+          balance: holder.balance,
+        }));
 
         // console.log(convertedData);
         $holders.set(convertedData);
+
+        const totalBalance = data.reduce(
+          (total, holder) => total + holder.balance,
+          0,
+        );
+        console.log("totalBalance:", totalBalance);
+
+        setSupply(totalBalance);
       } catch (error) {
         console.error("Failed to fetch holders:", error);
       }

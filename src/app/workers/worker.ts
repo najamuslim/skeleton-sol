@@ -18,8 +18,6 @@ self.onmessage = function (event: MessageEvent<WorkerMessage<unknown>>) {
       handleGeneratePositions(message.data as WorkerGeneratePositionsData);
       break;
   }
-
-  // postMessage(result);
 };
 
 // send message to main thread
@@ -31,34 +29,13 @@ function handleGeneratePositions(data: WorkerGeneratePositionsData) {
   log.green("Worker: generatePositions", data);
 
   processDataInChunks(data.items, data.containerWidth);
-
-  // generatePositions(data.items, data.occupiedSpaces, data.containerWidth).then(
-  //   (result) => {
-  //     console.log(
-  //       "Worker: generatePositionsDone",
-  //       { chunkIdx: data.chunkIdx },
-  //       "result:",
-  //       result,
-  //     );
-  //
-  //     // send result back to main thread
-  //     sendMessage<WorkerGeneratePositionsResult>({
-  //       event: "generatePositionsDone",
-  //       data: {
-  //         chunkIdx: data.chunkIdx,
-  //         positions: result.positions,
-  //         occupiedSpaces: result.occupiedSpaces,
-  //       },
-  //     });
-  //   },
-  // );
 }
 
 const chunkSize = 100;
 
 const processDataInChunks = async (data: Holder[], containerWidth: number) => {
   const totalChunks = Math.ceil(data.length / chunkSize);
-  //const totalChunks = 20; // TODO: LIMIT CHUNKS
+  // const totalChunks = 10; // TODO: LIMIT CHUNKS
 
   let occupiedSpaces: OccupiedSpace[] = [];
 
@@ -74,11 +51,6 @@ const processDataInChunks = async (data: Holder[], containerWidth: number) => {
         containerWidth,
       );
       log.green("Worker: generatePositionsDone", "result:", result);
-
-      // trim prev occupiedSpaces a half at end
-      // occupiedSpaces = occupiedSpaces.splice(occupiedSpaces.length / 2);
-
-      //occupiedSpaces.push(...result.occupiedSpaces);
 
       occupiedSpaces = result.occupiedSpaces;
 
