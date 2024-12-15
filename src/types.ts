@@ -33,6 +33,7 @@ export type WorkerGeneratePositionsData = {
   items: Holder[];
   // occupiedSpaces: OccupiedSpace[];
   containerWidth: number;
+  supply: number;
 };
 
 export type WorkerGeneratePositionsResult = {

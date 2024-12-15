@@ -28,27 +28,28 @@ function sendMessage<T>(data: WorkerMessage<T>) {
 function handleGeneratePositions(data: WorkerGeneratePositionsData) {
   log.green("Worker: generatePositions", data);
 
-  processDataInChunks(data.items, data.containerWidth);
+  processDataInChunks(data);
 }
 
 const chunkSize = 100;
 
-const processDataInChunks = async (data: Holder[], containerWidth: number) => {
-  const totalChunks = Math.ceil(data.length / chunkSize);
-  // const totalChunks = 1; // TODO: LIMIT CHUNKS
+const processDataInChunks = async (data: WorkerGeneratePositionsData) => {
+  const totalChunks = Math.ceil(data.items.length / chunkSize);
+  // const totalChunks = 10; // TODO: LIMIT CHUNKS
 
   let occupiedSpaces: OccupiedSpace[] = [];
 
   for (let i = 0; i < totalChunks; i++) {
     const start = i * chunkSize;
-    const end = Math.min(start + chunkSize, data.length);
-    const chunk = data.slice(start, end);
+    const end = Math.min(start + chunkSize, data.items.length);
+    const chunk = data.items.slice(start, end);
 
     if (chunk.length > 0) {
       const result = await generatePositions(
         chunk,
         occupiedSpaces,
-        containerWidth,
+        data.containerWidth,
+        data.supply,
       );
       log.green("Worker: generatePositionsDone", "result:", result);
 

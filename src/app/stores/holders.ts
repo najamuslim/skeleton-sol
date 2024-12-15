@@ -55,6 +55,7 @@ function workerGeneratePositions(items: readonly Holder[]) {
     data: {
       items: items as Holder[],
       containerWidth: $containerWidth.get(),
+      supply: $supply.get(),
     },
   });
 }
