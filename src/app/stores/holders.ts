@@ -50,12 +50,19 @@ function workerSendMessage<T>(data: WorkerMessage<T>) {
 
 // send message to worker to generate positions
 function workerGeneratePositions(items: readonly Holder[]) {
+  let supply = $supply.get();
+
+  // if supply store is 0, calculate from holders
+  if (!supply) {
+    supply = items.reduce((total, holder) => total + holder.balance, 0);
+  }
+
   workerSendMessage<WorkerGeneratePositionsData>({
     event: "generatePositions",
     data: {
       items: items as Holder[],
       containerWidth: $containerWidth.get(),
-      supply: $supply.get(),
+      supply: supply,
     },
   });
 }
@@ -108,9 +115,6 @@ export const $maxY = computed($holdersData, (values) => {
 // a chunk is equals of x data
 const chunkSize = 100;
 
-// estimated chunk in pixels size
-const chunkSizeInPixels = chunkSize * 24;
-
 export const $totalChunks = computed($holders, (values) => {
   return Math.ceil(values.length / chunkSize);
 });
@@ -123,6 +127,21 @@ export const $currentChunkIdx = atom(0);
 
 // holders data of current visible chunk
 export const $holdersDataChunk = atom<Array<HolderData>>([]);
+
+// estimated chunk in pixels size
+// const chunkSizeInPixels = chunkSize * 24;
+const $chunkSizeInPixels = computed($holdersDataChunk, (values) => {
+  // const avgHeight = values.reduce((total, holder) => total + holder.size, 0) /
+  //   values.length;
+
+  const maxY = values.reduce(
+    (max, holder) => Math.max(max, holder.position.y),
+    0,
+  );
+  if (maxY === 0) return 900;
+  const currentChunkIdx = $currentChunkIdx.get();
+  return maxY / (currentChunkIdx + 1);
+});
 
 // get chunk data of specified index, and update holdersDataChunk
 function getChunkDataAndUpdate(chunkIdx: number) {
@@ -168,7 +187,7 @@ $scrollTop.subscribe((scrollTop) => {
   const currentChunkIdx = $currentChunkIdx.get();
 
   // if scroll passed the chunk size, load the next chunk
-  const nextChunkIdx = Math.floor(scrollTop / chunkSizeInPixels);
+  const nextChunkIdx = Math.floor(scrollTop / $chunkSizeInPixels.get());
 
   if (nextChunkIdx !== currentChunkIdx && nextChunkIdx < totalChunks) {
     $currentChunkIdx.set(nextChunkIdx);

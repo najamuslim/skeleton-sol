@@ -59,20 +59,30 @@ const Skeleton: React.FC<{
   //   return () => window.removeEventListener("resize", updateDimensions);
   // }, []);
 
-  // useEffect(() => {
-  //   if (searchedAddress) {
-  //     const skeletonElement = document.querySelector(
-  //       `[data-address="${searchedAddress}"]`,
-  //     );
-  //     if (skeletonElement) {
-  //       skeletonElement.scrollIntoView({ behavior: "smooth", block: "center" });
-  //       skeletonElement.classList.add("highlight-skeleton");
-  //       setTimeout(() => {
-  //         skeletonElement.classList.remove("highlight-skeleton");
-  //       }, 2000);
-  //     }
-  //   }
-  // }, [searchedAddress]);
+  useEffect(() => {
+    if (searchedAddress) {
+      console.log("skeleton searchedAddress:", searchedAddress);
+
+      const skeletonElement = document.querySelector(
+        `[data-address="${searchedAddress}"]`,
+      );
+
+      console.log("skeletonElement:", skeletonElement);
+
+      if (skeletonElement) {
+        // skeletonElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        containerRef.current?.scrollTo({
+          top: (skeletonElement as HTMLDivElement).offsetTop,
+          behavior: "smooth",
+        });
+
+        skeletonElement.classList.add("highlight-skeleton");
+        setTimeout(() => {
+          skeletonElement.classList.remove("highlight-skeleton");
+        }, 2000);
+      }
+    }
+  }, [searchedAddress]);
 
   // const itemsRef = useRef<Array<HTMLDivElement>>([]);
 

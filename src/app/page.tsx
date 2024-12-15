@@ -47,6 +47,7 @@ export default function Home() {
         const supply = await fetch("/api/token");
         const data = await supply.json();
         setSupply(data);
+        $supply.set(data);
       } catch (error) {
         console.error("Error:", error);
       }

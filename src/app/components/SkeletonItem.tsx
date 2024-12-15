@@ -129,7 +129,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         const idx = $holdersData
           .get()
           .findIndex((holder) => holder.wallet === address);
-        console.log("skeleton index:", idx);
+        console.log("skeleton index:", idx, address);
       }}
     >
       <div
@@ -188,7 +188,7 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
             {address.slice(0, 4)}...{address.slice(-4)}
           </p>
           <p className="text-white">{`${balance.toFixed(2)} $SKELLY`}</p>
-          <p className="text-white">{`${percentage.toFixed(2)}%`}</p>
+          <p className="text-white">{`${percentage < 0.01 ? "<0.01" : percentage.toFixed(2)}%`}</p>
         </div>
       )}
     </div>
