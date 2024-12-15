@@ -20,3 +20,23 @@ export type OccupiedSpace = {
   x2: number;
   y2: number;
 };
+
+type WorkerEvent = "generatePositions" | "generatePositionsDone";
+
+export interface WorkerMessage<T> {
+  event: WorkerEvent;
+  data: T;
+}
+
+export type WorkerGeneratePositionsData = {
+  chunkIdx: number;
+  items: Holder[];
+  occupiedSpaces: OccupiedSpace[];
+  containerWidth: number;
+};
+
+export type WorkerGeneratePositionsResult = {
+  chunkIdx: number;
+  positions: HolderData[];
+  occupiedSpaces: OccupiedSpace[];
+};

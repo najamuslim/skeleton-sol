@@ -3,7 +3,7 @@ import SkeletonItem from "./SkeletonItem";
 import { addressToColor, getFingers, getDynamicAppearance } from "../helpers";
 import { HolderData } from "@/types";
 import { throttle } from "lodash";
-import { $containerWidth, $scrollTop } from "../stores/holders";
+import { $containerWidth, $scrollTop, $worker } from "../stores/holders";
 
 const Skeleton: React.FC<{
   holders: Array<HolderData>;
@@ -13,21 +13,15 @@ const Skeleton: React.FC<{
 }> = ({ holders, searchedAddress, supply, height }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // create web worker
+  // create web worker and store
   useEffect(() => {
     const worker = new Worker(new URL("../workers/worker.ts", import.meta.url));
-
-    // set up an event listener for the worker's message event
-    worker.onmessage = (event) => {
-      console.log("Worker message received:", event.data);
-    };
-
-    // send a message to the worker
-    worker.postMessage(10);
+    $worker.set(worker);
 
     // Clean up the worker when the component unmounts
     return () => {
       worker.terminate();
+      $worker.set(null);
     };
   }, []);
 

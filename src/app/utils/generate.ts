@@ -1,13 +1,18 @@
 import { Holder, HolderData, OccupiedSpace } from "@/types";
 import { clamp } from "./math";
 
+export type GeneratePositionsResult = {
+  positions: HolderData[];
+  occupiedSpaces: OccupiedSpace[];
+};
+
 // create pure functions
 
 export function generatePositions(
   items: Holder[],
   occupiedSpaces: readonly OccupiedSpace[],
   containerWidth: number,
-): Promise<{ positions: HolderData[]; occupiedSpaces: OccupiedSpace[] }> {
+): Promise<GeneratePositionsResult> {
   console.log(`Processing ${items.length} holders...`);
 
   const spaces: OccupiedSpace[] = [...occupiedSpaces];

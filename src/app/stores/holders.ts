@@ -1,4 +1,11 @@
-import { Holder, HolderData, OccupiedSpace } from "@/types";
+import {
+  Holder,
+  HolderData,
+  OccupiedSpace,
+  WorkerGeneratePositionsData,
+  WorkerGeneratePositionsResult,
+  WorkerMessage,
+} from "@/types";
 import { atom, computed } from "nanostores";
 import { generatePositions } from "../utils/generate";
 
@@ -10,6 +17,49 @@ export const $containerWidth = atom(1200);
 export const $holders = atom<Array<Holder>>([]);
 
 $holders.subscribe((value) => console.log("holders total:", value.length));
+
+// Web Worker ==========================================================================
+
+// store web worker
+export const $worker = atom<Worker | null>(null);
+
+// worker event listener
+$worker.subscribe((worker) => {
+  if (worker) {
+    const w = worker as Worker;
+
+    // set up an event listener for the worker's message event
+    w.onmessage = function (event: MessageEvent<WorkerMessage<unknown>>) {
+      const message = event.data;
+
+      // handle specific event
+      switch (message.event) {
+        case "generatePositionsDone":
+          handleGeneratePositionsResult(
+            message.data as WorkerGeneratePositionsResult,
+          );
+          break;
+      }
+    };
+  }
+});
+
+function workerSendMessage<T>(data: WorkerMessage<T>) {
+  const w = $worker.get();
+  if (w) {
+    w.postMessage(data);
+  }
+}
+
+function handleGeneratePositionsResult(result: WorkerGeneratePositionsResult) {
+  console.log("handleGeneratePositionsResult chunkIdx:", result.chunkIdx);
+
+  $occupiedSpaces.set([...$occupiedSpaces.get(), ...result.occupiedSpaces]);
+
+  $holdersData.set([...$holdersData.get(), ...result.positions]);
+}
+
+// ======================================================================================
 
 // store occupied spaces of the skeleton container
 const $occupiedSpaces = atom<OccupiedSpace[]>([]);
@@ -46,7 +96,6 @@ export const $currentChunkIdx = atom(0);
 export const $holdersDataChunk = atom<Array<HolderData>>([]);
 
 // TODO: should move to Web Worker to avoid blocking UI
-
 // process the chunk
 async function processChunk(items: Holder[]) {
   const { positions, occupiedSpaces } = await generatePositions(
@@ -60,6 +109,19 @@ async function processChunk(items: Holder[]) {
   $holdersData.set([...$holdersData.get(), ...positions]);
 }
 
+// send message to worker and process data
+function workerProcessChunk(chunkIdx: number, items: Holder[]) {
+  workerSendMessage<WorkerGeneratePositionsData>({
+    event: "generatePositions",
+    data: {
+      chunkIdx,
+      items,
+      occupiedSpaces: $occupiedSpaces.get(),
+      containerWidth: $containerWidth.get(),
+    },
+  });
+}
+
 // process holders data in chunks
 const processDataInChunks = (data: readonly Holder[]) => {
   // const totalChunks = Math.ceil(data.length / chunkSize);
@@ -70,14 +132,18 @@ const processDataInChunks = (data: readonly Holder[]) => {
     const end = Math.min(start + chunkSize, data.length);
     const chunk = data.slice(start, end);
     if (chunk.length > 0) {
-      setTimeout(
-        (function (chunk) {
-          return function () {
-            processChunk(chunk);
-          };
-        })(chunk),
-        0,
-      );
+      // local process chunk
+      // setTimeout(
+      //   (function (chunk) {
+      //     return function () {
+      //       processChunk(chunk);
+      //     };
+      //   })(chunk),
+      //   0,
+      // );
+
+      // send message to worker
+      workerProcessChunk(i, chunk);
     }
   }
 };

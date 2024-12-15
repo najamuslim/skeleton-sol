@@ -1,11 +1,54 @@
-self.onmessage = function (event) {
-  console.log("Received message from the main thread:", event.data);
+import {
+  WorkerGeneratePositionsData,
+  WorkerGeneratePositionsResult,
+  WorkerMessage,
+} from "@/types";
+import { generatePositions } from "../utils/generate";
 
-  // Perform some computation
-  const result = event.data * 2;
+// handle message from main thread
+self.onmessage = function (event: MessageEvent<WorkerMessage<unknown>>) {
+  const message = event.data;
 
-  // Send the result back to the main thread
-  postMessage(result);
+  // handle specific event
+  switch (message.event) {
+    case "generatePositions":
+      handleGeneratePositions(message.data as WorkerGeneratePositionsData);
+      break;
+  }
+
+  // postMessage(result);
 };
+
+function sendMessage<T>(data: WorkerMessage<T>) {
+  postMessage(data);
+}
+
+function handleGeneratePositions(data: WorkerGeneratePositionsData) {
+  console.log("Worker: generatePositions", {
+    chunkIdx: data.chunkIdx,
+    total: data.items.length,
+  });
+
+  generatePositions(data.items, data.occupiedSpaces, data.containerWidth).then(
+    (result) => {
+      console.log(
+        "Worker: generatePositionsDone",
+        { chunkIdx: data.chunkIdx },
+        "result:",
+        result,
+      );
+
+      // send result back to main thread
+      sendMessage<WorkerGeneratePositionsResult>({
+        event: "generatePositionsDone",
+        data: {
+          chunkIdx: data.chunkIdx,
+          positions: result.positions,
+          occupiedSpaces: result.occupiedSpaces,
+        },
+      });
+    },
+  );
+}
 
 export {};
