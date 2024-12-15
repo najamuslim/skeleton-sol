@@ -1,5 +1,5 @@
 import { Holder, HolderData, OccupiedSpace } from "@/types";
-import { clamp } from "./math";
+import { clamp, mapRange } from "./math";
 // import { Quadtree, Rectangle } from "@timohausmann/quadtree-ts";
 
 export type GeneratePositionsResult = {
@@ -70,7 +70,18 @@ export function generatePositions(
     const holder = items[i];
 
     // const size = 10 + Math.ceil(Math.sqrt(holder.balance / 1e9));
-    const size = clamp(Math.random() * 300, 40, 300);
+    // const size = clamp(Math.random() * 300, 40, 300);
+
+    const defaultSize = 100;
+    const minSize = 30;
+    const maxSize = 400;
+
+    const supply = 999992164;
+    const percentage = supply ? (holder.balance / supply) * 100 : 0;
+
+    const scale = mapRange(percentage, 0, 1, 0.8, 200);
+    const size = clamp(scale * defaultSize, minSize, maxSize);
+
     const seed = parseInt(holder.wallet.slice(0, 8), 16);
     const rotation = Math.sin(seed * 0.1) * 180;
 

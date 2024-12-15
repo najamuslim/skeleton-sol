@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Recent from "./components/Recent";
 // import { FpsView } from "react-fps";
 import { useStore } from "@nanostores/react";
-import { $holders, $holdersDataChunk, $maxY } from "./stores/holders";
+import { $holders, $holdersDataChunk, $maxY, $supply } from "./stores/holders";
 import { Holder } from "@/types";
 
 export default function Home() {
@@ -66,9 +66,6 @@ export default function Home() {
           balance: holder.balance,
         }));
 
-        // console.log(convertedData);
-        $holders.set(convertedData);
-
         const totalBalance = data.reduce(
           (total, holder) => total + holder.balance,
           0,
@@ -76,6 +73,10 @@ export default function Home() {
         console.log("totalBalance:", totalBalance);
 
         setSupply(totalBalance);
+        $supply.set(totalBalance);
+
+        // console.log(convertedData);
+        $holders.set(convertedData);
       } catch (error) {
         console.error("Failed to fetch holders:", error);
       }

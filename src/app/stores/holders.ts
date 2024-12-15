@@ -16,6 +16,9 @@ export const $containerWidth = atom(1200);
 // store raw holders data from api
 export const $holders = atom<Array<Holder>>([]);
 
+// total supply of the token
+export const $supply = atom<number>(0);
+
 $holders.subscribe((value) => log.info("holders total:", value.length));
 
 // store occupied spaces of the skeleton container

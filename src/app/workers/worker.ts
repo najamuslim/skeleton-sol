@@ -35,7 +35,7 @@ const chunkSize = 100;
 
 const processDataInChunks = async (data: Holder[], containerWidth: number) => {
   const totalChunks = Math.ceil(data.length / chunkSize);
-  // const totalChunks = 10; // TODO: LIMIT CHUNKS
+  // const totalChunks = 1; // TODO: LIMIT CHUNKS
 
   let occupiedSpaces: OccupiedSpace[] = [];
 
