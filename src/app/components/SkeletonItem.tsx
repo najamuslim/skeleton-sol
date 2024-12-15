@@ -1,5 +1,5 @@
 // components/Skeleton.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import BaseSkeleton from "../constants/skeletons/base";
 import Clothes5 from "../constants/skeletons/clothes/Clothes5";
@@ -87,6 +87,8 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
     }, 50);
   }, []);
 
+  const randomDelay = useMemo(() => Math.random() * 200, []);
+
   // useEffect(() => {
   //   const updateTooltipPosition = () => {
   //     if (elementRef.current) {
@@ -139,10 +141,16 @@ const SkeletonItem: React.FC<SkeletonProps> = ({
         }}
       >
         <div
-          className={classNames("absolute inset-0 transition duration-200", {
-            "scale-0": !isShow,
-            "scale-125": isShow,
-          })}
+          className={classNames(
+            "absolute inset-0 transition duration-200 ease-out",
+            {
+              "scale-0": !isShow,
+              "scale-125": isShow,
+            },
+          )}
+          style={{
+            transitionDelay: `${randomDelay}ms`,
+          }}
         >
           <svg
             width={size}
