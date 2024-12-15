@@ -1,5 +1,6 @@
 import { Holder, HolderData, OccupiedSpace } from "@/types";
 import { clamp } from "./math";
+// import { Quadtree, Rectangle } from "@timohausmann/quadtree-ts";
 
 export type GeneratePositionsResult = {
   positions: HolderData[];
@@ -16,6 +17,12 @@ export function generatePositions(
   console.log(`Processing ${items.length} holders...`);
 
   const spaces: OccupiedSpace[] = [...occupiedSpaces];
+
+  // const quadTree = new Quadtree({
+  //   width: containerWidth,
+  //   height: containerWidth,
+  //   maxObjects: 1,
+  // });
 
   const doesOverlap = (x: number, y: number, width: number, height: number) => {
     const margin = 2;
@@ -39,6 +46,7 @@ export function generatePositions(
     let y = 0;
     let foundPosition = false;
 
+    // try 100 times
     while (!foundPosition) {
       if (x + skeletonWidth > containerWidth) {
         x = 0;
@@ -80,6 +88,9 @@ export function generatePositions(
 
     // update occupiedSpaces
     spaces.push(newSpace);
+
+    // update quadTree
+    // quadTree.insert(new Rectangle({ x, y, width: size, height: size }));
 
     const position = {
       wallet: holder.wallet,

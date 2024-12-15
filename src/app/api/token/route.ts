@@ -25,9 +25,9 @@ export async function GET() {
 }
 
 // Fungsi tambahan terkait token bisa ditambahkan di sini
-export async function getTokenMetadata(
+async function getTokenMetadata(
   connection: Connection,
-  tokenMintAddress: string
+  tokenMintAddress: string,
 ) {
   try {
     const mintPubkey = new PublicKey(tokenMintAddress);

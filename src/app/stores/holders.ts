@@ -7,7 +7,7 @@ import {
   WorkerMessage,
 } from "@/types";
 import { atom, computed } from "nanostores";
-import { generatePositions } from "../utils/generate";
+// import { generatePositions } from "../utils/generate";
 
 // width of the viewport
 // we listen window resize event (Skeleton.tsx) to update this value
@@ -51,10 +51,42 @@ function workerSendMessage<T>(data: WorkerMessage<T>) {
   }
 }
 
+// const $occupiedMaxY = atom(0);
+
 function handleGeneratePositionsResult(result: WorkerGeneratePositionsResult) {
   console.log("Main: handleGeneratePositionsResult chunkIdx:", result);
 
-  $occupiedSpaces.set([...$occupiedSpaces.get(), ...result.occupiedSpaces]);
+  // const spaces = [...$occupiedSpaces.get()];
+  // spaces[result.chunkIdx] = result.occupiedSpaces;
+  // $occupiedSpaces.set(spaces);
+  //
+  // let maxY = $occupiedMaxY.get();
+  // // get max y of the prev space
+  // if (result.chunkIdx > 0) {
+  //   const prevMaxY = spaces[result.chunkIdx - 1].reduce(
+  //     (max, space) => Math.max(max, space.y2),
+  //     0,
+  //   );
+  //
+  //   maxY = Math.max(maxY, prevMaxY);
+  //   $occupiedMaxY.set(maxY);
+  // }
+  //
+  // console.log("maxY:", maxY);
+  //
+  // // offseting postition y, by chunkSizeInPixels
+  // const newPostitions = result.positions.map((position) => {
+  //   return {
+  //     ...position,
+  //     position: {
+  //       ...position.position,
+  //       x: position.position.x,
+  //       y: position.position.y + maxY + 100,
+  //     },
+  //   };
+  // });
+
+  $occupiedSpaces.set(result.occupiedSpaces);
 
   $holdersData.set([...$holdersData.get(), ...result.positions]);
 }
@@ -64,8 +96,8 @@ function handleGeneratePositionsResult(result: WorkerGeneratePositionsResult) {
 // store occupied spaces of the skeleton container
 const $occupiedSpaces = atom<OccupiedSpace[]>([]);
 
-$occupiedSpaces.listen((value) =>
-  console.log("occupiedSpaces total:", value.length),
+$occupiedSpaces.listen((spaces) =>
+  console.log("occupiedSpaces total:", spaces.length),
 );
 
 // store calculated holder data with position, rotation, and size
@@ -77,7 +109,7 @@ $holdersData.subscribe((value) =>
 
 // height of the content of scrollable area
 export const $maxY = computed($holdersData, (values) => {
-  return values.reduce((max, holder) => Math.max(max, holder.position.y), 0);
+  return values.reduce((max, holder) => Math.max(max, holder.position.y), 800);
 });
 
 // a chunk is equals of x data

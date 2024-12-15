@@ -57,10 +57,10 @@ function handleGeneratePositions(data: WorkerGeneratePositionsData) {
 const chunkSize = 100;
 
 const processDataInChunks = async (data: Holder[], containerWidth: number) => {
-  // const totalChunks = Math.ceil(data.length / chunkSize);
-  const totalChunks = 20; // TODO: LIMIT CHUNKS
+  const totalChunks = Math.ceil(data.length / chunkSize);
+  //const totalChunks = 20; // TODO: LIMIT CHUNKS
 
-  const occupiedSpaces: OccupiedSpace[] = [];
+  let occupiedSpaces: OccupiedSpace[] = [];
 
   for (let i = 0; i < totalChunks; i++) {
     const start = i * chunkSize;
@@ -75,9 +75,12 @@ const processDataInChunks = async (data: Holder[], containerWidth: number) => {
       );
       log.green("Worker: generatePositionsDone", "result:", result);
 
-      occupiedSpaces.push(...result.occupiedSpaces);
+      // trim prev occupiedSpaces a half at end
+      // occupiedSpaces = occupiedSpaces.splice(occupiedSpaces.length / 2);
 
-      log.green("Worker: occupiedSpaces:", occupiedSpaces.length);
+      //occupiedSpaces.push(...result.occupiedSpaces);
+
+      occupiedSpaces = result.occupiedSpaces;
 
       // send result back to main thread
       sendMessage<WorkerGeneratePositionsResult>({
