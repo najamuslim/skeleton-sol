@@ -107,6 +107,7 @@ export default function Home() {
         searchedAddress={searchedAddress}
         supply={supply}
         height={maxY}
+        onSearch={handleSearch}
       />
     
       </div>

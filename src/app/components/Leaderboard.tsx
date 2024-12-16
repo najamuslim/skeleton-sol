@@ -13,7 +13,11 @@ interface LeaderboardData {
   top7Holders: Holder[];
 }
 
-export default function Leaderboards() {
+interface LeaderboardProps {
+  onSearch: (address: string) => void;
+}
+
+export default function Leaderboards({ onSearch }: LeaderboardProps) {
   const [leaderboards, setLeaderboards] = useState<LeaderboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +96,8 @@ export default function Leaderboards() {
             {leaderboards?.top7Holders.map((holder) => (
               <div
                 key={holder.wallet}
-                className="flex justify-between font-bold my-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
+                className="cursor-pointer hover:bg-gray-100 flex justify-between font-bold my-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
+                onClick={() => onSearch(holder.wallet)} // tambahkan onClick handler
               >
                 <p className="w-1/6 text-center">{holder.rank}</p>
                 <p className="w-3/6 text-center">

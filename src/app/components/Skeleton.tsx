@@ -18,7 +18,8 @@ const Skeleton: React.FC<{
   searchedAddress: string | null;
   supply: number | null;
   height: number;
-}> = ({ holders, searchedAddress, supply, height }) => {
+  onSearch: (address: string) => void; 
+}> = ({ holders, searchedAddress, supply, height,onSearch }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const selectedHolder = useStore($selectedHolder);
@@ -184,7 +185,7 @@ const Skeleton: React.FC<{
       <div className="w-full md:w-[20%] bg-[#FFBE55] mt-2 p-2 h-fit">
         <Recent />
         <div className="p-2"></div>
-        <Leaderboards />
+        <Leaderboards onSearch={onSearch} />
       </div>
       <div className="flex-1 relative bg-cover pb-20 pt-4 md:ml-4">
         <div
