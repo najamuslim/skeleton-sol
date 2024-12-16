@@ -53,7 +53,6 @@ export async function GET() {
         };
       })
       .filter((holder) => holder.balance > 0) // Hanya holders dengan saldo > 0
-      .sort((a, b) => b.balance - a.balance); // Urutkan berdasarkan saldo
 
     console.log(`Found ${holders.length} valid holders`);
     return NextResponse.json(holders);

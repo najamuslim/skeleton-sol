@@ -1,4 +1,5 @@
 // src/components/Leaderboards.tsx
+import { HolderData } from "@/types";
 import { useEffect, useState } from "react";
 
 interface Holder {
@@ -15,41 +16,32 @@ interface LeaderboardData {
 
 interface LeaderboardProps {
   onSearch: (address: string) => void;
+  holders: HolderData[];
+  supply: number | null
 }
 
-export default function Leaderboards({ onSearch }: LeaderboardProps) {
-  const [leaderboards, setLeaderboards] = useState<LeaderboardData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function Leaderboards({ onSearch, holders, supply }: LeaderboardProps) {
   const [isActive, setActive] = useState(true);
 
-  useEffect(() => {
-    const fetchLeaderboards = async () => {
-      try {
-        const response = await fetch("/api/leaderboards");
-        if (!response.ok) {
-          throw new Error("Failed to fetch leaderboards");
-        }
-        const data = await response.json();
-        console.log(data)
-        setLeaderboards(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const top7Holders = holders
+    .map((account) => {
+      // Hitung persentase kepemilikan
+      const percentage = supply ? (account.position.balance / supply) * 100 : 0;
 
-    fetchLeaderboards();
-  }, []);
+      return {
+        rank: 0,
+        wallet: account.wallet,
+        balance: account.position.balance,
+        percentage: percentage.toFixed(2) + '%'
+      };
+    })
+    .filter((holder) => holder.balance > 0)
+    .sort((a, b) => b.balance - a.balance)
+    .slice(0, 7);
 
-  if (isLoading) {
-    return <div className="text-center p-4">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center text-red-500 p-4">{error}</div>;
-  }
+  top7Holders.forEach((holder, index) => {
+    holder.rank = index + 1;
+  });
 
   return (
     <div className="text-[#9B2823]">
@@ -62,7 +54,7 @@ export default function Leaderboards({ onSearch }: LeaderboardProps) {
             <span
               className={`
               inline-block transition-transform duration-300 text-xs
-              ${isActive ? "" :"rotate-180" }
+              ${isActive ? "" : "rotate-180"}
             `}
             >
               {`>>>`}
@@ -93,7 +85,7 @@ export default function Leaderboards({ onSearch }: LeaderboardProps) {
               <p className="w-3/6 text-center">Wallet</p>
               <p className="w-2/6 text-center">%</p>
             </div>
-            {leaderboards?.top7Holders.map((holder) => (
+            {top7Holders.map((holder) => (
               <div
                 key={holder.wallet}
                 className="cursor-pointer hover:bg-gray-100 flex justify-between font-bold my-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
