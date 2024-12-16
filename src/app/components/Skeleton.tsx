@@ -183,7 +183,7 @@ const Skeleton: React.FC<{
   return (
     <div className="flex flex-col md:flex-row justify-between bg-[url('/grain.png')] px-4 md:px-24">
       <div className="w-full md:w-[20%] bg-[#FFBE55] mt-2 p-2 h-fit">
-        <Recent />
+        {/* <Recent /> */}
         <div className="p-2"></div>
         <Leaderboards onSearch={onSearch} />
       </div>
