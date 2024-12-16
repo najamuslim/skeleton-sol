@@ -83,7 +83,7 @@ const Recent: React.FC<SkeletonProps> = () => {
         <div
           className={`
             bg-white shadow-lg
-            transform transition-all duration-300 ease-in-out
+            transform transition-all duration-300 ease-in-out  max-h-[200px] overflow-y-auto scrollbar
             ${isActive
               ? "translate-x-0 opacity-100 h-auto"
               : "translate-x-full opacity-0 h-0"

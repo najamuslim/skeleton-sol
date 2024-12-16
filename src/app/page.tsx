@@ -66,8 +66,8 @@ export default function Home() {
     };
 
     // TODO: disable first because we are using dummy fetch
-    fetchSupply();
-    fetchHolders();
+    // fetchSupply();
+    // fetchHolders();
 
     async function fetchDummyHolders() {
       try {
@@ -95,7 +95,7 @@ export default function Home() {
       }
     }
 
-    // fetchDummyHolders();
+    fetchDummyHolders();
   }, []);
 
   return (
