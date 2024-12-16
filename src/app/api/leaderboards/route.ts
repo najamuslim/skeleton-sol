@@ -56,7 +56,7 @@ export async function GET() {
       })
       .filter((holder) => holder.balance > 0)
       .sort((a, b) => b.balance - a.balance)
-      .slice(0, 7); // Ambil hanya 10 holder teratas
+      .slice(0, 7);
 
     // Tambahkan ranking 1-10
     top7Holders.forEach((holder, index) => {
@@ -68,8 +68,9 @@ export async function GET() {
       top7Holders: top7Holders
     });
 
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     console.error("API Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
