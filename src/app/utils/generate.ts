@@ -45,13 +45,13 @@ export function generatePositions(
     while (!foundPosition) {
       if (x + skeletonWidth > containerWidth) {
         x = 0;
-        y += 100; // Move to next row
+        y += 200 * Math.random(); // Move to next row
       }
 
       if (!doesOverlap(x, y, skeletonWidth, skeletonHeight)) {
         foundPosition = true;
       } else {
-        x += 50; // Try next position
+        x += 100 * Math.random(); // Try next position
       }
     }
 
@@ -67,14 +67,13 @@ export function generatePositions(
     // const size = 10 + Math.ceil(Math.sqrt(holder.balance / 1e9));
     // const size = clamp(Math.random() * 300, 40, 300);
 
-    const defaultSize = 100;
-    const minSize = 30;
-    const maxSize = 400;
+    const minSize = 60;
+    const maxSize = 1200;
 
-    const percentage = supply ? (holder.balance / supply) * 100 : 0;
+    const percentage = supply ? holder.balance / supply : 0;
 
-    const scale = mapRange(percentage, 0, 1, 0.8, 200);
-    const size = clamp(scale * defaultSize, minSize, maxSize);
+    const scale = mapRange(percentage, 0, 1, 60, 7000);
+    const size = clamp(scale, minSize, maxSize);
 
     const seed = parseInt(holder.wallet.slice(0, 8), 16);
     const rotation = Math.sin(seed * 0.1) * 180;
