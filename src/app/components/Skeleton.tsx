@@ -10,6 +10,8 @@ import {
   $worker,
 } from "../stores/holders";
 import { useStore } from "@nanostores/react";
+import Leaderboards from "./Leaderboard";
+import Recent from "./Recent";
 
 const Skeleton: React.FC<{
   holders: Array<HolderData>;
@@ -178,30 +180,37 @@ const Skeleton: React.FC<{
   }, [visibleItems, searchedAddress, supply]);
 
   return (
-    <div className="flex-1 relative bg-[url('/grain.png')] bg-cover pb-20 pt-4">
-      <div
-        ref={containerRef}
-        id="skeletonContainer"
-        onScroll={onScroll}
-        style={{
-          position: "relative",
-          width: "90%",
-          margin: "0px auto",
-          maxHeight: "calc(100vh - 90px - 16px - 80px)",
-          borderRadius: "0.5rem",
-          overflowY: "scroll",
-          overflowX: "hidden",
-        }}
-        className="scrollbar"
-      >
+    <div className="flex flex-col md:flex-row justify-between bg-[url('/grain.png')] px-4 md:px-24">
+      <div className="w-full md:w-[20%] bg-[#FFBE55] mt-4 p-2 h-fit">
+        <Recent />
+        <div className="p-2"></div>
+        <Leaderboards />
+      </div>
+      <div className="flex-1 relative bg-cover pb-20 pt-4 md:ml-4">
         <div
+          ref={containerRef}
+          id="skeletonContainer"
+          onScroll={onScroll}
           style={{
             position: "relative",
-            height: height,
-            padding: "40px 0",
+            width: "100%",
+            margin: "0px auto",
+            maxHeight: "calc(100vh - 90px - 16px - 80px)",
+            borderRadius: "0.5rem",
+            overflowY: "scroll",
+            overflowX: "hidden",
           }}
+          className="scrollbar"
         >
-          {renderItems}
+          <div
+            style={{
+              position: "relative",
+              height: height,
+              padding: "40px 0",
+            }}
+          >
+            {renderItems}
+          </div>
         </div>
       </div>
       <img

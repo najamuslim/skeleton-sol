@@ -14,6 +14,7 @@ import {
   $supply,
 } from "./stores/holders";
 import { Holder } from "@/types";
+import Leaderboards from "./components/Leaderboard";
 
 export default function Home() {
   // const [holders, setHolders] = useState<Array<Holder>>([]);
@@ -107,7 +108,7 @@ export default function Home() {
         supply={supply}
         height={maxY}
       />
-      <Recent />
-    </div>
+    
+      </div>
   );
 }
