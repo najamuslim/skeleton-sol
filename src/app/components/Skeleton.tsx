@@ -185,7 +185,7 @@ const Skeleton: React.FC<{
       <div className="w-full md:w-[20%] bg-[#FFBE55] mt-2 p-2 h-fit">
         <Recent />
         <div className="p-2"></div>
-        <Leaderboards onSearch={onSearch} holders={holders} supply={supply} />
+        <Leaderboards onSearch={onSearch}/>
       </div>
       <div className="flex-1 relative bg-cover pb-20 pt-4 md:ml-4">
         <div

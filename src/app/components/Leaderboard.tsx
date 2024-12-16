@@ -1,6 +1,11 @@
 // src/components/Leaderboards.tsx
 import { HolderData } from "@/types";
+import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
+import {
+  $holdersData,
+  $supply,
+} from "../stores/holders";
 
 interface Holder {
   rank: number;
@@ -16,32 +21,36 @@ interface LeaderboardData {
 
 interface LeaderboardProps {
   onSearch: (address: string) => void;
-  holders: HolderData[];
-  supply: number | null
 }
 
-export default function Leaderboards({ onSearch, holders, supply }: LeaderboardProps) {
+export default function Leaderboards({ onSearch }: LeaderboardProps) {
   const [isActive, setActive] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const holders = useStore($holdersData);
+  const supply = useStore($supply);
+  const [top7Holders, setTop7Holders] = useState<Array<any>>([]);
 
-  const top7Holders = holders
-    .map((account) => {
-      // Hitung persentase kepemilikan
-      const percentage = supply ? (account.position.balance / supply) * 100 : 0;
 
-      return {
-        rank: 0,
-        wallet: account.wallet,
-        balance: account.position.balance,
-        percentage: percentage.toFixed(2) + '%'
-      };
-    })
-    .filter((holder) => holder.balance > 0)
-    .sort((a, b) => b.balance - a.balance)
-    .slice(0, 7);
+  console.log(holders.length)
+  useEffect(() => {
+    setIsLoading(true);
 
-  top7Holders.forEach((holder, index) => {
-    holder.rank = index + 1;
-  });
+    // Proses data dalam useEffect untuk menghindari blocking
+    const processedHolders = holders
+      .sort((a, b) => b.position.balance - a.position.balance)
+      .slice(0, 7)
+      .map((holder, index) => ({
+        ...holder,
+        rank: index + 1,
+        percentage: ((holder.position.balance / supply) * 100).toFixed(2) + '%'
+      }));
+
+    setTop7Holders(processedHolders);
+    setIsLoading(false);
+  }, [holders,supply]);
+
+
+  if(isLoading) return <div>Loading...</div>
 
   return (
     <div className="text-[#9B2823]">
