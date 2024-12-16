@@ -45,7 +45,7 @@ export default function Home() {
         const convertedData = data.map(
           (holder: { wallet: string; balance: bigint }) => ({
             wallet: holder.wallet,
-            balance: Number(holder.balance) / 1e9,
+            balance: Number(holder.balance),
           }),
         );
         // setHolders(convertedData);
@@ -109,7 +109,6 @@ export default function Home() {
         height={maxY}
         onSearch={handleSearch}
       />
-    
-      </div>
+    </div>
   );
 }

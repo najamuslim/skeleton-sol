@@ -15,8 +15,7 @@ export async function GET() {
     const supply = await connection.getTokenSupply(mintPubkey);
 
     // Konversi ke number dengan mempertimbangkan decimals
-    const totalSupply =
-      Number(supply.value.amount) / Math.pow(10, supply.value.decimals);
+    const totalSupply = Number(supply.value.amount);
     return NextResponse.json(totalSupply);
   } catch (error: any) {
     console.error("Error fetching token supply:", error);
