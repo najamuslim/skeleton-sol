@@ -2,6 +2,47 @@ import { Holder, HolderData, OccupiedSpace } from "@/types";
 import { clamp, mapRange } from "./math";
 import log from "./log";
 
+function mapPercentSize(value: number) {
+  if (value <= 0.004) {
+    return 49;
+  }
+  if (value <= 0.008) {
+    return 74;
+  }
+  if (value <= 0.05) {
+    return 98;
+  }
+  if (value <= 0.1) {
+    return 123;
+  }
+  if (value <= 0.3) {
+    return 147;
+  }
+  if (value <= 1.0) {
+    return 172;
+  }
+  if (value <= 2.0) {
+    return 197;
+  }
+  if (value <= 4.0) {
+    return 222;
+  }
+  if (value <= 8.0) {
+    return 247;
+  }
+  if (value <= 16.0) {
+    return 272;
+  }
+  if (value <= 32.0) {
+    return 297;
+  }
+  if (value <= 64.0) {
+    return 322;
+  }
+  // if <= 100
+  return 347;
+}
+
 export type GeneratePositionsResult = {
   positions: HolderData[];
   occupiedSpaces: OccupiedSpace[];
@@ -67,13 +108,15 @@ export function generatePositions(
     // const size = 10 + Math.ceil(Math.sqrt(holder.balance / 1e9));
     // const size = clamp(Math.random() * 300, 40, 300);
 
-    const minSize = 60;
-    const maxSize = 1200;
+    // const minSize = 30;
+    // const maxSize = 1200;
 
-    const percentage = supply ? holder.balance / supply : 0;
+    const percentage = supply ? (holder.balance / supply) * 100 : 0;
 
-    const scale = mapRange(percentage, 0, 1, 60, 7000);
-    const size = clamp(scale, minSize, maxSize);
+    const size = mapPercentSize(percentage);
+
+    // const scale = mapRange(percentage, 0, 1, 30, 77_000);
+    // const size = clamp(scale, minSize, maxSize);
 
     const seed = parseInt(holder.wallet.slice(0, 8), 16);
     const rotation = Math.sin(seed * 0.1) * 180;
