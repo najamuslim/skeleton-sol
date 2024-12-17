@@ -127,23 +127,28 @@ export const $scrollTop = atom(0);
 // the chunk which is currently visible
 export const $currentChunkIdx = atom(0);
 
+$currentChunkIdx.subscribe((value) => log.info("currentChunkIdx:", value));
+
 // holders data of current visible chunk
 export const $holdersDataChunk = atom<Array<HolderData>>([]);
 
 // estimated chunk in pixels size
 // const chunkSizeInPixels = chunkSize * 24;
 const $chunkSizeInPixels = computed($holdersDataChunk, (values) => {
+  return 800;
   // const avgHeight = values.reduce((total, holder) => total + holder.size, 0) /
   //   values.length;
 
-  const maxY = values.reduce(
-    (max, holder) => Math.max(max, holder.position.y),
-    0,
-  );
-  if (maxY === 0) return 900;
-  const currentChunkIdx = $currentChunkIdx.get();
-  return maxY / (currentChunkIdx + 1);
+  // const maxY = values.reduce(
+  //   (max, holder) => Math.max(max, holder.position.y),
+  //   0,
+  // );
+  // if (maxY === 0) return 900;
+  // const currentChunkIdx = $currentChunkIdx.get();
+  // return maxY / (currentChunkIdx + 1);
 });
+
+$chunkSizeInPixels.subscribe((value) => log.info("chunkSizeInPixels:", value));
 
 // get chunk data of specified index, and update holdersDataChunk
 function getChunkDataAndUpdate(chunkIdx: number) {
@@ -184,15 +189,34 @@ $holdersData.subscribe((value) => {
 // scroll handler, get spesific chunks of data to be rendered
 // subscribe to scroll position
 $scrollTop.subscribe((scrollTop) => {
-  // log.info("scrollTop", scrollTop);
+  log.info("scrollTop", scrollTop);
   const totalChunks = $totalChunks.get();
   const currentChunkIdx = $currentChunkIdx.get();
 
-  // if scroll passed the chunk size, load the next chunk
-  const nextChunkIdx = Math.floor(scrollTop / $chunkSizeInPixels.get());
+  const filteredHolders = $holdersData.get().filter((item) => {
+    const itemTop = item.position.y;
+    const itemBottom = item.position.y + item.position.size;
 
-  if (nextChunkIdx !== currentChunkIdx && nextChunkIdx < totalChunks) {
-    $currentChunkIdx.set(nextChunkIdx);
-    getChunkDataAndUpdate(nextChunkIdx);
-  }
+    const safeArea = 0; // we can also add some safe area to avoid clipping
+    const top = scrollTop - safeArea;
+    const bottom = scrollTop + $chunkSizeInPixels.get() + safeArea;
+
+    if (itemBottom >= top && itemTop <= bottom) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  console.log("filteredHolders:", filteredHolders.length);
+
+  $holdersDataChunk.set(filteredHolders);
+
+  // if scroll passed the chunk size, load the next chunk
+  // const nextChunkIdx = Math.floor(scrollTop / $chunkSizeInPixels.get());
+  //
+  // if (nextChunkIdx !== currentChunkIdx && nextChunkIdx < totalChunks) {
+  //   $currentChunkIdx.set(nextChunkIdx);
+  //   getChunkDataAndUpdate(nextChunkIdx);
+  // }
 });
