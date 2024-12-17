@@ -1,12 +1,12 @@
 // src/components/Leaderboards.tsx
-import { HolderData } from "@/types";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 import {
   $holdersData,
   $supply,
 } from "../stores/holders";
-
+import { HolderData } from "@/types";
+ 
 interface Holder {
   rank: number;
   wallet: string;
@@ -28,7 +28,7 @@ export default function Leaderboards({ onSearch }: LeaderboardProps) {
   const [isLoading, setIsLoading] = useState(true);
   const holders = useStore($holdersData);
   const supply = useStore($supply);
-  const [top7Holders, setTop7Holders] = useState<Array<any>>([]);
+  const [top7Holders, setTop7Holders] = useState<Holder[]>([]);
 
 
   console.log(holders.length)
@@ -42,7 +42,8 @@ export default function Leaderboards({ onSearch }: LeaderboardProps) {
       .map((holder, index) => ({
         ...holder,
         rank: index + 1,
-        percentage: ((holder.position.balance / supply) * 100).toFixed(2) + '%'
+        percentage: ((holder.position.balance / supply) * 100).toFixed(2) + '%',
+        balance: holder.position.balance
       }));
 
     setTop7Holders(processedHolders);
