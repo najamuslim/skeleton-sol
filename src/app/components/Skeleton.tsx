@@ -12,14 +12,15 @@ import {
 import { useStore } from "@nanostores/react";
 import Leaderboards from "./Leaderboard";
 import Recent from "./Recent";
+import classNames from "classnames";
 
 const Skeleton: React.FC<{
   holders: Array<HolderData>;
   searchedAddress: string | null;
   supply: number | null;
   height: number;
-  onSearch: (address: string) => void; 
-}> = ({ holders, searchedAddress, supply, height,onSearch }) => {
+  onSearch: (address: string) => void;
+}> = ({ holders, searchedAddress, supply, height, onSearch }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const selectedHolder = useStore($selectedHolder);
@@ -181,13 +182,14 @@ const Skeleton: React.FC<{
   }, [visibleItems, searchedAddress, supply]);
 
   return (
-    <div className="flex flex-col md:flex-row justify-between bg-[url('/grain.png')] px-4 md:px-24">
-      <div className="w-full md:w-[20%] bg-[#FFBE55] mt-2 p-2 h-fit">
+    <div className="relative h-screen flex flex-col md:flex-row justify-between border-frame bg-[url('/grain.png')] px-4 pb-4 md:px-8 md:pb-8 lg:px-12 lg:pb-12 xl:px-16 xl:pb-16 pt-24">
+      <div className="absolute lg:static z-10 left-0 md:left-8 right-0 md:mt-2 p-2 h-fit mx-4 md:w-1/3 lg:w-[20%] bg-[#FFBE55] ">
         <Recent />
         <div className="p-2"></div>
-        <Leaderboards onSearch={onSearch}/>
+        <Leaderboards onSearch={onSearch} />
       </div>
-      <div className="flex-1 relative bg-cover pb-20 pt-4 md:ml-4">
+
+      <div className="flex-1 relative bg-cover pt-2 md:ml-4">
         <div
           ref={containerRef}
           id="skeletonContainer"
@@ -196,12 +198,17 @@ const Skeleton: React.FC<{
             position: "relative",
             width: "100%",
             margin: "0px auto",
-            maxHeight: "calc(100vh - 90px - 16px - 80px)",
             borderRadius: "0.5rem",
             overflowY: "scroll",
             overflowX: "hidden",
           }}
-          className="scrollbar"
+          className={classNames(
+            "scrollbar ",
+            "max-h-[calc(100vh-90px-16px-16px)]",
+            "md:max-h-[calc(100vh-90px-16px-24px)]",
+            "lg:max-h-[calc(100vh-90px-16px-48px)]",
+            "xl:max-h-[calc(100vh-90px-16px-64px)]",
+          )}
         >
           <div
             style={{
@@ -214,12 +221,12 @@ const Skeleton: React.FC<{
           </div>
         </div>
       </div>
-      <img
-        src="/frame.png"
-        alt="Frame"
-        className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none"
-        style={{ zIndex: 1 }}
-      />
+      {/* <img */}
+      {/*   src="/frame.png" */}
+      {/*   alt="Frame" */}
+      {/*   className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none" */}
+      {/*   style={{ zIndex: 1 }} */}
+      {/* /> */}
     </div>
   );
 };

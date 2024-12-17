@@ -117,7 +117,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen">
-      {/* <FpsView /> */}
       <Navbar onSearch={handleSearch} />
       <Skeleton
         holders={data}
@@ -127,6 +126,7 @@ export default function Home() {
         onSearch={handleSearch}
       />
       <LoadingScreen />
+      {/* <FpsView /> */}
     </div>
   );
 }

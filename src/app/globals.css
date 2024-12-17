@@ -78,7 +78,27 @@ body {
 }
 
 .border-frame {
-  border-image: url("/border-frame.png") 10% repeat;
-  border-width: 64px;
+  border-image: url("/border-frame.png");
+  border-image-slice: 69;
+  border-image-width: 24px;
+  border-image-repeat: repeat;
   border-style: solid;
+}
+
+@media (min-width: 768px) {
+  .border-frame {
+    border-image-width: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .border-frame {
+    border-image-width: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .border-frame {
+    border-image-width: 64px;
+  }
 }
