@@ -17,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="fixed top-0 w-screen h-24 flex bg-[#9B2823] justify-between items-center py-2 md:py-5 px-4 md:px-6 lg:px-12 xl:px-16 gap-2 md:gap-0 z-20">
+    <div className="fixed top-0 w-screen h-24 flex bg-[#9B2823] bg-dust justify-between items-center py-2 md:py-5 px-4 md:px-6 lg:px-12 xl:px-16 gap-2 md:gap-0 z-20">
       <div>
         <h1 className="font-bold text-[2rem] md:text-[3.125rem] leading-none text-white/50">
           SKELLY

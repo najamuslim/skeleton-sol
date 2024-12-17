@@ -182,7 +182,7 @@ const Skeleton: React.FC<{
   }, [visibleItems, searchedAddress, supply]);
 
   return (
-    <div className="relative h-screen flex flex-col md:flex-row justify-between border-frame bg-[url('/grain.png')] px-4 pb-4 md:px-8 md:pb-8 lg:px-12 lg:pb-12 xl:px-16 xl:pb-16 pt-24">
+    <div className="relative h-screen flex flex-col md:flex-row justify-between border-frame bg-dust px-4 pb-4 md:px-8 md:pb-8 lg:px-12 lg:pb-12 xl:px-16 xl:pb-16 pt-24">
       <div className="absolute lg:static z-10 left-0 md:left-8 right-0 md:mt-2 p-2 h-fit mx-4 md:w-1/3 lg:w-[20%] bg-[#FFBE55] ">
         <Recent />
         <div className="p-2"></div>

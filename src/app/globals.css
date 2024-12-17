@@ -102,3 +102,7 @@ body {
     border-image-width: 64px;
   }
 }
+
+.bg-dust {
+  background-image: url("/dust.png");
+}

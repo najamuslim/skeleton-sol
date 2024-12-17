@@ -116,7 +116,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-[#F6AA30]">
       <Navbar onSearch={handleSearch} />
       <Skeleton
         holders={data}

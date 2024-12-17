@@ -21,7 +21,7 @@ export default function LoadingScreen() {
   return (
     <div
       className={classNames(
-        "fixed bg-[#F6AA30] z-30 border-frame flex flex-col items-center justify-center h-screen w-screen transition duration-300",
+        "fixed bg-[#F6AA30] bg-dust z-30 border-frame flex flex-col items-center justify-center h-screen w-screen transition duration-300",
         {
           "opacity-100": isLoading,
           "opacity-0": !isLoading,
@@ -39,7 +39,7 @@ export default function LoadingScreen() {
             <div
               key={`loading-screen-${i}`}
               className={classNames(
-                "w-4 h-4 md:w-8 md:h-8 lg:w-[54px] lg:h-[54px] bg-[#A23733] transition",
+                "w-4 h-4 md:w-8 md:h-8 lg:w-[54px] lg:h-[54px] bg-[#A23733] bg-dust transition",
                 {
                   "opacity-100": counter >= i + 1,
                   "opacity-10": counter < i + 1,
