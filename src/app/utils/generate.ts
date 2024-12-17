@@ -7,40 +7,177 @@ function mapPercentSize(value: number) {
     return 49;
   }
   if (value <= 0.008) {
-    return 74;
+    return 57;
+  }
+  if (value <= 0.01) {
+    return 65;
   }
   if (value <= 0.05) {
-    return 98;
+    return 74;
   }
   if (value <= 0.1) {
-    return 123;
+    return 82;
   }
   if (value <= 0.3) {
-    return 147;
+    return 90;
   }
-  if (value <= 1.0) {
-    return 172;
+  if (value <= 0.5) {
+    return 98;
   }
-  if (value <= 2.0) {
-    return 197;
+  if (value <= 0.7) {
+    return 107;
   }
-  if (value <= 4.0) {
-    return 222;
+  if (value <= 0.9) {
+    return 115;
   }
-  if (value <= 8.0) {
-    return 247;
+  if (value <= 1.1) {
+    return 123;
   }
-  if (value <= 16.0) {
-    return 272;
+  if (value <= 1.3) {
+    return 132;
   }
-  if (value <= 32.0) {
-    return 297;
+  if (value <= 1.5) {
+    return 140;
   }
-  if (value <= 64.0) {
-    return 322;
+  if (value <= 1.7) {
+    return 148;
   }
-  // if <= 100
-  return 347;
+  if (value <= 1.9) {
+    return 156;
+  }
+  if (value <= 2.1) {
+    return 165;
+  }
+  if (value <= 2.3) {
+    return 173;
+  }
+  if (value <= 2.5) {
+    return 181;
+  }
+  if (value <= 2.7) {
+    return 190;
+  }
+  if (value <= 2.9) {
+    return 198;
+  }
+  if (value <= 3.1) {
+    return 206;
+  }
+  if (value <= 3.3) {
+    return 215;
+  }
+  if (value <= 3.5) {
+    return 223;
+  }
+  if (value <= 3.7) {
+    return 231;
+  }
+  if (value <= 3.9) {
+    return 239;
+  }
+  if (value <= 4.1) {
+    return 248;
+  }
+  if (value <= 4.3) {
+    return 256;
+  }
+  if (value <= 4.5) {
+    return 264;
+  }
+  if (value <= 4.7) {
+    return 273;
+  }
+  if (value <= 4.9) {
+    return 281;
+  }
+  if (value <= 5.1) {
+    return 289;
+  }
+  if (value <= 5.3) {
+    return 298;
+  }
+  if (value <= 5.5) {
+    return 306;
+  }
+  if (value <= 5.7) {
+    return 315;
+  }
+  if (value <= 5.9) {
+    return 323;
+  }
+  if (value <= 6.1) {
+    return 331;
+  }
+  if (value <= 6.3) {
+    return 339;
+  }
+  if (value <= 6.5) {
+    return 348;
+  }
+  if (value <= 6.7) {
+    return 356;
+  }
+  if (value <= 6.9) {
+    return 365;
+  }
+  if (value <= 7.1) {
+    return 373;
+  }
+  if (value <= 7.3) {
+    return 381;
+  }
+  if (value <= 7.5) {
+    return 390;
+  }
+  if (value <= 7.7) {
+    return 398;
+  }
+  if (value <= 7.9) {
+    return 406;
+  }
+  if (value <= 8.1) {
+    return 414;
+  }
+  if (value <= 8.3) {
+    return 422;
+  }
+  if (value <= 8.5) {
+    return 430;
+  }
+  if (value <= 8.7) {
+    return 439;
+  }
+  if (value <= 8.9) {
+    return 447;
+  }
+  if (value <= 9.1) {
+    return 455;
+  }
+  if (value <= 9.3) {
+    return 464;
+  }
+  if (value <= 9.5) {
+    return 472;
+  }
+  if (value <= 9.7) {
+    return 480;
+  }
+  if (value <= 9.9) {
+    return 488;
+  }
+  if (value <= 10.1) {
+    return 497;
+  }
+  if (value <= 20) {
+    return 550;
+  }
+  if (value <= 35) {
+    return 600;
+  }
+  if (value <= 50) {
+    return 650;
+  }
+  return 650;
 }
 
 export type GeneratePositionsResult = {

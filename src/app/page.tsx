@@ -15,6 +15,8 @@ import {
 } from "./stores/holders";
 import { Holder } from "@/types";
 import Leaderboards from "./components/Leaderboard";
+import LoadingScreen from "./components/LoadingScreen";
+import { $isLoading } from "./stores/skeleton";
 
 export default function Home() {
   // const [holders, setHolders] = useState<Array<Holder>>([]);
@@ -65,12 +67,21 @@ export default function Home() {
       }
     };
 
-    // TODO: disable first because we are using dummy fetch
-    fetchSupply();
-    fetchHolders();
+    async function loadAll() {
+      $isLoading.set(true);
+      // wait all promises to resolve
+      await Promise.all([fetchHolders(), fetchSupply()]);
+      // at least wait 1s
+      setTimeout(() => {
+        $isLoading.set(false);
+      }, 1000);
+    }
+
+    loadAll();
 
     async function fetchDummyHolders() {
       try {
+        $isLoading.set(true);
         const response = await fetch("/holders10k.json");
         const data: { address: string; balance: number }[] =
           await response.json();
@@ -83,15 +94,21 @@ export default function Home() {
           (total, holder) => total + holder.balance,
           0,
         );
-        console.log("totalBalance:", totalBalance);
+        // console.log("totalBalance:", totalBalance);
 
         setSupply(totalBalance);
         $supply.set(totalBalance);
 
         // console.log(convertedData);
         $holders.set(convertedData);
+
+        // dummy loading
+        setTimeout(() => {
+          $isLoading.set(false);
+        }, 2000);
       } catch (error) {
         console.error("Failed to fetch holders:", error);
+        $isLoading.set(false);
       }
     }
 
@@ -109,6 +126,7 @@ export default function Home() {
         height={maxY}
         onSearch={handleSearch}
       />
+      <LoadingScreen />
     </div>
   );
 }

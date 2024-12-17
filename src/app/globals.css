@@ -76,3 +76,9 @@ body {
 .scrollbar::-webkit-scrollbar-thumb:hover {
   background: #ab3833;
 }
+
+.border-frame {
+  border-image: url("/border-frame.png") 10% repeat;
+  border-width: 64px;
+  border-style: solid;
+}
