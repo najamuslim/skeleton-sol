@@ -52,6 +52,15 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
         </form>
 
         <Link
+          href="https://avengers-dev.gitbook.io/skelly"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="py-2 px-4 md:p-4 bg-white flex items-center justify-center text-center font-medium text-black md:text-xl leading-tight md:leading-6"
+        >
+          Docs
+        </Link>
+
+        <Link
           href="/"
           target="_blank"
           rel="noopener noreferrer"
