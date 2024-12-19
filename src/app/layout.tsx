@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     url: config.url,
     images: [
       {
-        url: `${config.url}/banner.png`,
+        url: `${config.url}/banner.jpg`,
         width: 1279,
         height: 721,
       },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: config.title,
     description: config.description,
-    images: [`${config.url}/banner.png`],
+    images: [`${config.url}/banner.jpg`],
   },
 };
 
