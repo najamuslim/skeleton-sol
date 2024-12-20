@@ -1,5 +1,6 @@
 // components/Skeleton.tsx
 import React, { useEffect, useState } from "react";
+import { solanaRpcUrl, tokenMintAddress } from "../constants/config";
 
 interface Transaction {
   signature: string;
@@ -34,30 +35,33 @@ const Recent: React.FC<SkeletonProps> = () => {
       }
     };
 
-    // TODO: disable first because we are using dummy fetch
-    fetchTransactions();
-    const interval = setInterval(fetchTransactions, 60000);
-    return () => clearInterval(interval);
+    // fetch when .env populated
+    if (tokenMintAddress && solanaRpcUrl) {
+      fetchTransactions();
+
+      const interval = setInterval(fetchTransactions, 60000);
+
+      return () => clearInterval(interval);
+    }
   }, []);
 
   const getTimeAgo = (timestamp: string | null) => {
     if (!timestamp) return "Unknown";
     const diff = Date.now() - new Date(timestamp).getTime();
     const minutes = Math.floor(diff / 60000);
-    
+
     if (minutes < 1) return "Just now";
     if (minutes === 1) return "1m ago";
     if (minutes < 60) return `${minutes}m ago`;
-    
+
     const hours = Math.floor(minutes / 60);
     if (hours === 1) return "1h ago";
     if (hours < 24) return `${hours}h ago`;
-    
+
     const days = Math.floor(hours / 24);
     if (days === 1) return "1d ago";
     return `${days}d ago`;
   };
-  
 
   if (transactions.length === 0) {
     return null;
@@ -74,7 +78,7 @@ const Recent: React.FC<SkeletonProps> = () => {
             <span
               className={`
               inline-block transition-transform duration-300 text-xs
-              ${isActive ? "" : "rotate-180" }
+              ${isActive ? "" : "rotate-180"}
             `}
             >
               {`>>>`}
@@ -91,9 +95,10 @@ const Recent: React.FC<SkeletonProps> = () => {
           className={`
             bg-white shadow-lg
             transform transition-all duration-300 ease-in-out  max-h-[200px] overflow-y-auto scrollbar
-            ${isActive
-              ? "translate-x-0 opacity-100 h-auto"
-              : "translate-x-full opacity-0 h-0"
+            ${
+              isActive
+                ? "translate-x-0 opacity-100 h-auto"
+                : "translate-x-full opacity-0 h-0"
             }
             overflow-hidden
           `}
@@ -111,9 +116,15 @@ const Recent: React.FC<SkeletonProps> = () => {
                   key={index}
                   className="flex justify-between font-bold my-1 text-[8px] sm:text-[10px] md:text-xs lg:text-sm"
                 >
-                  <p className="w-1/4 text-center">{getTimeAgo(tx.timestamp)}</p>
-                  <p className="w-2/4 text-center">{tx.from.slice(0, 5) + "..."}</p>
-                  <p className="w-1/4 text-center">{Number(tx.amount).toFixed(2)}</p>
+                  <p className="w-1/4 text-center">
+                    {getTimeAgo(tx.timestamp)}
+                  </p>
+                  <p className="w-2/4 text-center">
+                    {tx.from.slice(0, 5) + "..."}
+                  </p>
+                  <p className="w-1/4 text-center">
+                    {Number(tx.amount).toFixed(2)}
+                  </p>
                 </div>
               ))
             ) : (

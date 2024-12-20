@@ -17,6 +17,7 @@ import { Holder } from "@/types";
 import Leaderboards from "./components/Leaderboard";
 import LoadingScreen from "./components/LoadingScreen";
 import { $isLoading } from "./stores/skeleton";
+import { solanaRpcUrl, tokenMintAddress } from "./constants/config";
 
 export default function Home() {
   // const [holders, setHolders] = useState<Array<Holder>>([]);
@@ -77,7 +78,14 @@ export default function Home() {
       }, 1000);
     }
 
-    // loadAll();
+    // fetch all when .env populated
+    if (tokenMintAddress && solanaRpcUrl) {
+      loadAll();
+    } else {
+      setTimeout(() => {
+        $isLoading.set(false);
+      }, 2000);
+    }
 
     async function fetchDummyHolders() {
       try {
@@ -114,10 +122,6 @@ export default function Home() {
 
     // fetchDummyHolders();
     //
-
-    setTimeout(() => {
-      $isLoading.set(false);
-    }, 2000);
   }, []);
 
   return (
