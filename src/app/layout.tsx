@@ -11,8 +11,7 @@ const pixelifySans = Pixelify_Sans({
 
 const config = {
   title: "Skelly",
-  description:
-    "SHA-256 entropy, modular arithmetic, and spatial Euclidean positioning.",
+  description: "Your identity, etched in bytes and bones.",
   url: appUrl,
 };
 
