@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Pixelify_Sans } from "next/font/google";
 import "./globals.css";
+import { appUrl } from "./constants/config";
 
 const pixelifySans = Pixelify_Sans({
   subsets: ["latin"],
@@ -12,7 +13,7 @@ const config = {
   title: "Skelly",
   description:
     "SHA-256 entropy, modular arithmetic, and spatial Euclidean positioning.",
-  url: "https://skeleton-sol.vercel.app",
+  url: appUrl,
 };
 
 export const metadata: Metadata = {

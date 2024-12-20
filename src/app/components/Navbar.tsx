@@ -1,6 +1,7 @@
 // components/Navbar.tsx
 import Link from "next/link";
 import React, { useState } from "react";
+import { buyUrl, docsUrl } from "../constants/config";
 
 interface NavbarProps {
   onSearch: (address: string) => void;
@@ -52,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
         </form>
 
         <Link
-          href="https://avengers-dev.gitbook.io/skelly"
+          href={docsUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="py-2 px-4 md:p-4 bg-white flex items-center justify-center text-center font-medium text-black md:text-xl leading-tight md:leading-6"
@@ -61,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
         </Link>
 
         <Link
-          href="/"
+          href={buyUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="py-2 px-4 md:p-4 bg-[#F7AF3E] flex items-center justify-center text-center font-medium text-black md:text-xl leading-tight md:leading-6"
