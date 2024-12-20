@@ -77,7 +77,7 @@ export default function Home() {
       }, 1000);
     }
 
-    loadAll();
+    // loadAll();
 
     async function fetchDummyHolders() {
       try {
@@ -113,6 +113,11 @@ export default function Home() {
     }
 
     // fetchDummyHolders();
+    //
+
+    setTimeout(() => {
+      $isLoading.set(false);
+    }, 2000);
   }, []);
 
   return (
